@@ -290,7 +290,7 @@
 				}).then(function(response){
 					$.ajax({
 						type:'POST',
-						url: 'https://18.116.53.228/admin/og-picture',
+						url: "{{ url_for('save_og_image') }}",
 						data:{'image':response},
 						success: function(result){
 

@@ -28,13 +28,11 @@
 			</button>
 			<div class="collapse navbar-collapse" id="navbarContent">
 				 <ul class="navbar-nav mr-auto">
-				 	{% for page in base_page_names %}
-				 	{% if page.is_model %}
+
 					<li class="nav-item active">
-						<a class="nav-link" href="{{ page.page_url }}">{{ page.page_name }}</a>
+						<a class="nav-link" href="{{ url_for('pages') }}">Pages</a>
 					</li>
-					{% endif %}
-					{% endfor %}
+
 				</ul>
 			</div>
 		</div>
