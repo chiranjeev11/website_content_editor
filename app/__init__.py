@@ -111,7 +111,13 @@ def index():
 
 	meta_obj = page.metaContent[0]
 
-	image_path = '/static/crop_images/' + meta_obj.og_image
+	if meta_obj.og_image:
+
+		image_path = '/static/crop_images/' + meta_obj.og_image
+
+	else:
+
+		image_path = None
 
 	return render_template('index.html', page=meta_obj, image_path=image_path)
 
@@ -140,7 +146,13 @@ def privacy_policy():
 
 	meta_obj = page.metaContent[0]
 
-	image_path = '/static/crop_images/' + meta_obj.og_image
+	if meta_obj.og_image:
+
+		image_path = '/static/crop_images/' + meta_obj.og_image
+
+	else:
+
+		image_path = None
 
 	return render_template('privacy_policy.html', page=meta_obj, image_path=image_path)
 
@@ -151,7 +163,13 @@ def fees_page():
 
 	meta_obj = page.metaContent[0]
 
-	image_path = '/static/crop_images/' + meta_obj.og_image
+	if meta_obj.og_image:
+
+		image_path = '/static/crop_images/' + meta_obj.og_image
+
+	else:
+
+		image_path = None
 
 	return render_template('privacy_policy.html', page=meta_obj, image_path=image_path)
 
@@ -165,7 +183,13 @@ def terms_conditions():
 	meta_obj = page.metaContent[0]
 
 
-	image_path = '/static/crop_images/' + meta_obj.og_image
+	if meta_obj.og_image:
+
+		image_path = '/static/crop_images/' + meta_obj.og_image
+
+	else:
+
+		image_path = None
 
 	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path)
 
