@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+	<form action="{{ url_for('metaContent_edit') }}" method="post">
+		<div class="row">
+			<div class="col">
+				<div class="form-group m-2">
+					<label for="page-name">Page Name</label>
+					<input type="text" class="form-control" id="page-name" name="page_name" value="{{ page.page_name }}" placeholder="Enter Page Name" readonly>
+				</div>
+				<div class="form-group m-2">
+					<label for="title">Meta Title</label>
+					<input type="text" class="form-control" id="title" name="meta_title" value="{{ meta.title }}" placeholder="Enter Title">
+				</div>
+				<div class="form-group m-2">
+					<label for="keywords">Meta Keywords</label>
+					<input type="text" class="form-control" id="keywords" name="meta_keywords" value="{{ meta.keywords }}" placeholder="Enter Keywords   eg - coding,programing">
+				</div>
+				<div class="form-group m-2">
+					<label for="canonical">Canonical</label>
+					<input type="text" class="form-control" id="canonical" name="canonical" value="{{ meta.canonical }}" placeholder="Enter Canonical Link">
+				</div>
+				<div class="form-group m-2">
+					<label for="type">OG:Type</label>
+					<input type="text" class="form-control" id="type" name="og_type" value="{{ meta.og_type }}" placeholder="Enter type">
+				</div>
+				<div class="form-group m-2">
+					<label for="ogimage">OG:Image</label>
+					<input type="file" class="form-control" id="ogimage" name="og_image">
+				</div>
+
+
+			</div>
+			<div class="col">
+
+				<div class="form-group m-2">
+					<label for="page-url">Page Url</label>
+					<input type="text" class="form-control" id="page-url" name="page_url" value="{{ page.page_url }}" placeholder="Enter Page Url">
+				</div>
+				<div class="form-group m-2">
+					<label for="description">Meta Description</label>
+					<input type="text" class="form-control" id="description" name="meta_description" value="{{ meta.description }}" placeholder="Enter Description">
+				</div>
+				<div class="form-group m-2">
+					<label for="robots">Meta Robots</label>
+					<input type="text" class="form-control" id="robots" name="meta_robots" value="{{ meta.robots }}" placeholder="Enter robots   eg - index,follow">
+				</div>
+				<div class="form-group m-2">
+					<label for="ogtitle">OG:Title</label>
+					<input type="text" class="form-control" id="ogtitle" name="og_title" value="{{ meta.og_title }}" placeholder="Enter og title">	   
+				</div>
+				<div class="form-group form-check m-2">
+						<input type="checkbox" class="form-check-input" id="title-checkbox">
+						<label class="form-check-label small" for="title-checkbox">Same as meta title</label>
+				</div>
+				<div class="form-group m-2">
+					<label for="ogdescription">OG:Description</label>
+					<input type="text" class="form-control" id="ogdescription" name="og_description" value="{{ meta.og_description }}" placeholder="Enter og description">
+				</div>
+				<div class="form-group form-check m-2">
+						<input type="checkbox" class="form-check-input" id="description-checkbox">
+						<label class="form-check-label small" for="description-checkbox">Same as meta description</label>
+				</div>
+			</div>
+	</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+		<a href="{{ url_for('pages') }}" class="btn btn-primary">Cancel</a>
+	</form>
+
+	<script>
+		let image = document.getElementById('ogimage');
+
+		let checkboxes = document.getElementsByClassName('form-check-input');
+
+
+		function check(){
+
+					let check1 = document.getElementById("title-checkbox").checked;
+					let check2 = document.getElementById("description-checkbox").checked;
+
+
+					if(check1){
+						document.getElementById('ogtitle').value = document.getElementById('title').value;
+					}
+					if(check2){
+						document.getElementById('ogdescription').value = document.getElementById('description').value;
+					}
+		}
+
+
+		Array.from(checkboxes).forEach(function(element) {
+		element.addEventListener('click', check);
+    });
+
+	</script>
+
+
+{% endblock %}

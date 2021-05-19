@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+	
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Page Name</th>
+				<th scope="col">Page Url</th>
+				<th scope="col"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for page in page_names %}
+			<tr>
+				
+				<td>{{ page.page_name }}</td>
+				<td>{{ page.page_url }}</td>
+				<td><a type="button" class="edit" title="edit page"><i class="fas fa-edit"></i></a></td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<!-- Modal -->
+	<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+		  <div class="modal-header">
+			<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+			<button type="button" class="btn close" data-dismiss="modal" aria-label="Close">
+			  <span aria-hidden="true">&times;</span>
+			</button>
+		  </div>
+		  <div class="modal-body">
+			<form class="edit-form" action="{{ url_for('metaContent_edit') }}" method="post">
+				<div class="row">
+					<div class="col">
+						<div class="form-group m-2">
+							<label for="page-name">Page Name</label>
+							<input type="text" class="form-control" id="page-name" name="page_name" placeholder="Enter Page Name" readonly>
+						</div>
+						
+						<div class="form-group m-2">
+							<label for="title">Meta Title</label>
+							<input type="text" class="form-control check" id="title" name="meta_title" placeholder="Enter Title">
+						</div>
+						
+						<div class="form-group m-2">
+							<label for="keywords">Meta Keywords</label>
+							<input type="text" class="form-control" id="keywords" name="meta_keywords" placeholder="Enter Keywords   eg - coding,programing">
+						</div>
+						
+						<div class="form-group m-2">
+							<label for="canonical">Canonical</label>
+							<input type="text" class="form-control" id="canonical" name="canonical" placeholder="Enter Canonical Link">
+						</div>
+						
+			
+						<div class="form-group m-2">
+							<label for="ogtitle">OG:Title</label>
+							<input type="text" class="form-control" id="ogtitle" name="og_title" placeholder="Enter og title">	   
+						</div>
+						<div class="form-group m-2 form-check">
+								<input type="checkbox" class="form-check-input" id="title-checkbox">
+								<label class="form-check-label small" for="title-checkbox">Same as meta title</label>
+						</div>
+						
+						
+					</div>
+					<div class="col">
+						<div class="form-group m-2">
+							<label for="page-url">Page Url</label>
+							<input type="text" class="form-control" id="page-url" name="page_url" placeholder="Enter Page Url">
+						</div>
+						<div class="form-group m-2">
+							<label for="description">Meta Description</label>
+							<input type="text" class="form-control check" id="description" name="meta_description" placeholder="Enter Description">
+						</div>
+						<div class="form-group m-2" style="z-index: 1100;">
+							<label for="robots">Meta Robots</label><br>
+							<!-- <input type="text" class="form-control" id="robots" name="meta_robots" list="robo" placeholder="Enter robots   eg - index,follow"> -->
+							<select id="robo" name="meta_robots" class="form-control w-100">
+								<option>index</option>
+								<option>follow</option>
+								<option>noindex</option>
+								<option>nofollow</option>
+								<option>noimageindex</option>
+								<option>none</option>
+							</select>
+						</div>
+						<div class="form-group m-2">
+							<label for="type">OG:Type</label>
+							<input type="text" class="form-control" id="type" name="og_type" list="types" placeholder="Enter og type">
+							<datalist id="types">
+								<option>website</option>
+								<option>article</option>
+								<option>book</option>
+								<option>profile</option>
+							</datalist>
+						</div>
+						<div class="form-group m-2">
+							<label for="ogdescription">OG:Description</label>
+							<input type="text" class="form-control" id="ogdescription" name="og_description" placeholder="Enter og description">
+						</div>
+						<div class="form-group m-2 form-check">
+								<input type="checkbox" class="form-check-input" id="description-checkbox">
+								<label class="form-check-label small" for="description-checkbox">Same as meta description</label>
+						</div>
+					</div>
+					<div class="form-group m-2">
+						<label for="image-input">OG:Image</label>
+						<input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="image-input" name="og_image">
+					</div>
+					<div id="image-div" title="Crop"></div>
+					<div class="d-flex justify-content-center">
+						<img class="image-preview" height="300px" width="400px" src="">
+					</div>
+					
+
+				</div>
+			</form>
+		  </div>
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-secondary close" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary" id="submit-form">Save changes</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	<script>
+
+		$(document).ready(function(){
+
+			$('#robo').select2({
+				placeholder:'Enter robots   eg - index,follow'
+			});
+
+			$('.image-preview').hide()
+
+			$('#image-div').hide();
+
+			let editButton = document.getElementsByClassName('edit');
+			Array.from(editButton).forEach(function(element){
+				element.addEventListener('click', editRequest);
+			});
+
+			function editRequest(){
+				let page_name = $(this).parent().siblings()[0].innerHTML;
+				$('#editModal').modal("show");
+				$('.close').click(function(){
+					$('#editModal').modal("hide");
+					window.location = "{{ url_for('pages') }}";
+				})
+
+				let checkboxes = document.getElementsByClassName('form-check-input');
+
+				let title_description = document.getElementsByClassName('check');
+
+
+				function check(){
+
+							let check1 = document.getElementById("title-checkbox").checked;
+							let check2 = document.getElementById("description-checkbox").checked;
+
+
+							if(check1){
+								document.getElementById('ogtitle').value = document.getElementById('title').value;
+								document.getElementById('ogtitle').readOnly = true;
+
+							}
+							else{
+								document.getElementById('ogtitle').readOnly = false;
+							}
+							if(check2){
+								document.getElementById('ogdescription').value = document.getElementById('description').value;
+								document.getElementById('ogdescription').readOnly = true;
+							}
+							else{
+								document.getElementById('ogdescription').readOnly = false;
+							}
+				}
+
+
+				Array.from(checkboxes).forEach(function(element) {
+				element.addEventListener('change', check);
+				});
+
+				Array.from(title_description).forEach(function(element) {
+				element.addEventListener('input', check);
+				});
+
+
+
+				$.ajax({
+					type:'POST',
+					url: "{{ url_for('pages_edit_request') }}",
+					success: function(result){
+						document.getElementById('page-name').value = result.page_name;
+						document.getElementById('page-url').value = result.page_url;
+						document.getElementById('title').value = result.meta_title;
+						document.getElementById('description').value = result.meta_description;
+						document.getElementById('keywords').value = result.meta_keywords;
+						document.getElementById('robots').value = result.meta_robots;
+						document.getElementById('canonical').value = result.meta_canonical;
+						document.getElementById('type').value = result.og_type;
+						document.getElementById('ogtitle').value = result.og_title;
+						document.getElementById('ogdescription').value = result.og_description;
+						document.getElementsByClassName('modal-title')[0].innerHTML = result.page_name;
+
+						let submit_button = document.getElementById('submit-form');
+
+						submit_button.addEventListener('click', function(){
+							crop();
+
+						
+						})
+
+						if (result.og_image){
+							let url = '/static/crop_images/'
+							url = url+result.og_image;
+							$('.image-preview').attr('src', url);
+							$('.image-preview').show();
+						}
+
+			
+
+						
+						
+					},
+					data: {'data':page_name}
+
+				})
+				
+			}
+
+			let image_div = $('#image-div').croppie({
+				enableExif:true, 	
+				viewport: {
+					width:300,
+					height:200,
+					type: 'square'
+				},
+				boundary: {
+					width:400,
+					height:300
+				}
+			});
+
+			$(document).on('change', '#image-input', show_image)
+
+			
+
+			function show_image(){
+				$('.image-preview').hide();
+				if (this.files.length==0){
+					$('.image-preview').show();
+					$('#image-div').hide();
+				}
+				else{
+					let a = this.files[0]['name'].split('.');
+					console.log(a[a.length-1]);
+					if (['jpg', 'png', 'jpeg'].includes(a[a.length-1])){
+						var reader = new FileReader()
+						reader.onload = function(event){
+
+							image_div.croppie('bind',{
+
+							url:event.target.result,
+							
+							});
+						};
+							
+						reader.readAsDataURL( this.files[0] );
+						$('#image-div').show();
+					}
+					else{
+						$.ajax({
+							url:'http://127.0.0.1:5000/flash_messages',
+							data:{'message':'Choose jpg, jpeg or png file only'}
+						})
+					}
+					// $('.image-preview').hide();
+					// else{
+					// 	```<div class="alert alert-warning alert-dismissible fade show" role="alert">
+					// 	  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+					// 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					// 	    <span aria-hidden="true">&times;</span>
+					// 	  </button>
+					// 	</div>```
+					// }
+					
+				}
+				
+			}
+
+
+
+			function crop(){
+				image_div.croppie("result", {
+					type:'canvas',
+					size:'viewport'
+				}).then(function(response){
+					$.ajax({
+						type:'POST',
+						url: 'http://127.0.0.1:5000/admin/og-picture',
+						data:{'image':response},
+						success: function(result){
+
+							var input = document.createElement('input');
+							$(input).attr("type", "hidden")
+							          .attr("name", "image_name")
+							          .attr("value", result['image_name'])
+							          .appendTo(".edit-form");
+							$('.edit-form').submit();
+						}
+					})
+
+				})
+			}
+
+			
+		})
+
+		
+
+
+	</script>
+
+
+{% endblock %}
