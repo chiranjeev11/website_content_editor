@@ -82,7 +82,7 @@
 						<div class="form-group m-2" style="z-index: 1100;">
 							<label for="robots">Meta Robots</label><br>
 							<!-- <input type="text" class="form-control" id="robots" name="meta_robots" list="robo" placeholder="Enter robots   eg - index,follow"> -->
-							<select id="robo" name="meta_robots" class="form-control w-100">
+							<select id="robots" name="meta_robots" class="form-control w-100">
 								<option>index</option>
 								<option>follow</option>
 								<option>noindex</option>
@@ -134,7 +134,7 @@
 
 		$(document).ready(function(){
 
-			$('#robo').select2({
+			$('#robots').select2({
 				placeholder:'Enter robots   eg - index,follow'
 			});
 
