@@ -81,15 +81,15 @@
 						</div>
 						<div class="form-group m-2" style="z-index: 1100;">
 							<label for="robots">Meta Robots</label><br>
-							<!-- <input type="text" class="form-control" id="robots" name="meta_robots" list="robo" placeholder="Enter robots   eg - index,follow"> -->
-							<select id="robots" name="meta_robots" class="form-control w-100">
+							<input type="text" class="form-control" id="robots" name="meta_robots" list="robo" placeholder="Enter robots   eg - index,follow">
+							<datalist id="robo">
 								<option>index</option>
 								<option>follow</option>
 								<option>noindex</option>
 								<option>nofollow</option>
 								<option>noimageindex</option>
 								<option>none</option>
-							</select>
+							</datalist>
 						</div>
 						<div class="form-group m-2">
 							<label for="type">OG:Type</label>
@@ -134,9 +134,9 @@
 
 		$(document).ready(function(){
 
-			$('#robots').select2({
-				placeholder:'Enter robots   eg - index,follow'
-			});
+			// $('#robots').select2({
+			// 	placeholder:'Enter robots   eg - index,follow'
+			// });
 
 			$('.image-preview').hide()
 
@@ -276,21 +276,6 @@
 						reader.readAsDataURL( this.files[0] );
 						$('#image-div').show();
 					}
-					else{
-						$.ajax({
-							url:'http://127.0.0.1:5000/flash_messages',
-							data:{'message':'Choose jpg, jpeg or png file only'}
-						})
-					}
-					// $('.image-preview').hide();
-					// else{
-					// 	```<div class="alert alert-warning alert-dismissible fade show" role="alert">
-					// 	  <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-					// 	  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					// 	    <span aria-hidden="true">&times;</span>
-					// 	  </button>
-					// 	</div>```
-					// }
 					
 				}
 				
@@ -305,7 +290,7 @@
 				}).then(function(response){
 					$.ajax({
 						type:'POST',
-						url: 'http://127.0.0.1:5000/admin/og-picture',
+						url: 'https://18.116.53.228/admin/og-picture',
 						data:{'image':response},
 						success: function(result){
 
