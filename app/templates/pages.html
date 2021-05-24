@@ -15,7 +15,6 @@
 		<tbody>
 			{% for page in page_names %}
 			<tr>
-				
 				<td>{{ page.page_name }}</td>
 				<td>{{ page.page_url }}</td>
 				<td><a type="button" class="edit" title="edit page"><i class="fas fa-edit"></i></a></td>
@@ -114,7 +113,7 @@
 						<label for="image-input">OG:Image</label>
 						<input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="image-input" name="og_image">
 					</div>
-					<div id="image-div" title="Crop"></div>
+					<div id="image-div" class="w-100 h-100" title="Crop"></div>
 					<div class="d-flex justify-content-center">
 						<img class="image-preview" height="100%" width="100%" src="">
 					</div>
@@ -200,14 +199,37 @@
 					success: function(result){
 						document.getElementById('page-name').value = result.page_name;
 						document.getElementById('page-url').value = result.page_url;
-						document.getElementById('title').value = result.meta_title;
-						document.getElementById('description').value = result.meta_description;
-						document.getElementById('keywords').value = result.meta_keywords;
-						document.getElementById('robots').value = result.meta_robots;
-						document.getElementById('canonical').value = result.meta_canonical;
-						document.getElementById('type').value = result.og_type;
-						document.getElementById('ogtitle').value = result.og_title;
-						document.getElementById('ogdescription').value = result.og_description;
+						if (result.meta_title){
+							document.getElementById('title').value = result.meta_title;
+						}
+						if (result.result.meta_description){
+							document.getElementById('description').value = result.meta_description;
+						}
+						if (result.meta_keywords){
+							document.getElementById('keywords').value = result.meta_keywords;
+						}
+						if (result.meta_robots){
+							document.getElementById('robots').value = result.meta_robots;
+						}
+						if (result.meta_canonical){
+							document.getElementById('canonical').value = result.meta_canonical;
+						}
+						if (result.og_type){
+							document.getElementById('type').value = result.og_type;
+						}
+						if (result.og_title){
+							document.getElementById('ogtitle').value = result.og_title;
+						}
+						if (result.og_description){
+							document.getElementById('ogdescription').value = result.og_description;
+						}
+						
+						
+						
+						
+						
+						
+						
 						document.getElementsByClassName('modal-title')[0].innerHTML = result.page_name;
 
 						let submit_button = document.getElementById('submit-form');
