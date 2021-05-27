@@ -57,7 +57,6 @@
 							<input type="text" class="form-control" id="canonical" name="canonical" placeholder="Enter Canonical Link">
 						</div>
 						
-			
 						<div class="form-group m-2">
 							<label for="ogtitle">OG:Title</label>
 							<input type="text" class="form-control" id="ogtitle" name="og_title" placeholder="Enter og title">	   
@@ -80,15 +79,15 @@
 						</div>
 						<div class="form-group m-2" style="z-index: 1100;">
 							<label for="robots">Meta Robots</label><br>
-							<input type="text" class="form-control" id="robots" name="meta_robots" list="robo" placeholder="Enter robots   eg - index,follow">
-							<datalist id="robo">
-								<option>index</option>
-								<option>follow</option>
-								<option>noindex</option>
-								<option>nofollow</option>
-								<option>noimageindex</option>
-								<option>none</option>
-							</datalist>
+							<input type="hidden" id="robo" name="meta_robots">
+							<select id="robots" multiple="multiple">
+								<option value="index">index</option>
+								<option value="follow">follow</option>
+								<option value="noindex">noindex</option>
+								<option value="nofollow">nofollow</option>
+								<option value="noimageindex">noimageindex</option>
+								<option value="none">none</option>
+							</select>
 						</div>
 						<div class="form-group m-2">
 							<label for="type">OG:Type</label>
@@ -133,9 +132,15 @@
 
 		$(document).ready(function(){
 
-			// $('#robots').select2({
-			// 	placeholder:'Enter robots   eg - index,follow'
-			// });
+			$('#robots').select2({
+				dropdownParent: $('.modal'),
+				width: '100%',
+				placeholder: "Enter robots   eg - index,follow"
+			})
+
+			$('#robots').change(function(){
+				$('#robo').val($(this).val());
+			})
 
 			$('.image-preview').hide()
 
@@ -209,7 +214,12 @@
 							document.getElementById('keywords').value = result.meta_keywords;
 						}
 						if (result.meta_robots){
-							document.getElementById('robots').value = result.meta_robots;
+
+							let values = result.meta_robots.split(',');
+
+							console.log(values);
+
+							$('#robots').select2().val(values).trigger('change');
 						}
 						if (result.meta_canonical){
 							document.getElementById('canonical').value = result.meta_canonical;

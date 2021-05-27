@@ -69,6 +69,14 @@ def admin_login():
 	return render_template('login.html', form=form)
 
 
+@app.route('/admin/logout')
+def admin_logout():
+
+	logout_user()
+
+	return redirect(url_for('admin_login'))
+
+
 
 
 
@@ -213,6 +221,10 @@ def metaContent_edit():
 	data = request.form
 
 	page = Pages.query.filter_by(page_name=data['page_name']).first()
+
+	for key in data:
+
+		print(key, data[key])
 
 	
 	if page.metaContent:
