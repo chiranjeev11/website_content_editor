@@ -34,7 +34,7 @@ def index():
 	if meta_obj.og_image:
 
 
-		image_path = url_for('/static/crop_images', filename = meta_obj.og_image)
+		image_path = url_for('static', filename = 'crop_images/{}'.format(meta_obj.og_image))
 
 	else:
 
@@ -86,7 +86,7 @@ def admin_logout():
 @login_required
 def admin():
 
-	return render_template('admin.html')
+	return redirect(url_for('pages'))
 
 
 @app.route('/admin/pages')
@@ -111,7 +111,7 @@ def privacy_policy():
 
 	if meta_obj.og_image:
 
-		image_path = url_for('/static/crop_images', filename = meta_obj.og_image)
+		image_path = url_for('static', filename = 'crop_images/{}'.format(meta_obj.og_image))
 
 	else:
 
@@ -129,7 +129,7 @@ def fees_page():
 
 	if meta_obj.og_image:
 
-		image_path = url_for('/static/crop_images', filename = meta_obj.og_image)
+		image_path = url_for('static', filename = 'crop_images/{}'.format(meta_obj.og_image))
 
 	else:
 
@@ -149,7 +149,7 @@ def terms_conditions():
 
 	if meta_obj.og_image:
 
-		image_path = url_for('/static/crop_images', filename = meta_obj.og_image)
+		image_path = url_for('static', filename = 'crop_images/{}'.format(meta_obj.og_image))
 
 	else:
 
