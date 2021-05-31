@@ -8,15 +8,15 @@
 		<thead>
 			<tr>
 				<th scope="col">Page Name</th>
-				<th scope="col">Page Url</th>
+				<th scope="col">Url Slug</th>
 				<th scope="col"></th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for page in page_names %}
 			<tr>
-				<td>{{ page.page_name }}</td>
-				<td>{{ page.page_url }}</td>
+				<td><a href="{{ page.slug }}">{{ page.page_name }}</a></td>
+				<td>{{ page.slug }}</td>
 				<td><a type="button" class="edit" title="edit page"><i class="fas fa-edit"></i></a></td>
 			</tr>
 			{% endfor %}
@@ -70,8 +70,8 @@
 					</div>
 					<div class="col">
 						<div class="form-group m-2">
-							<label for="page-url">Page Url</label>
-							<input type="text" class="form-control" id="page-url" name="page_url" placeholder="Enter Page Url">
+							<label for="url-slug">Url Slug</label>
+							<input type="text" class="form-control" id="url-slug" name="url_slug" placeholder="Enter Page Url Slug">
 						</div>
 						<div class="form-group m-2">
 							<label for="description">Meta Description</label>
@@ -110,9 +110,9 @@
 					</div>
 					<div class="form-group m-2">
 						<label for="image-input">OG:Image</label>
+						<input type="hidden" name="image_bin" id="image-bin">
 						<input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="image-input" name="og_image">
 					</div>
-					<div id="image-div" class="w-100 h-100" title="Crop"></div>
 					<div class="d-flex justify-content-center">
 						<img class="image-preview" height="100%" width="100%" src="">
 					</div>
@@ -151,7 +151,6 @@
 
 			$('.image-preview').hide()
 
-			$('#image-div').hide();
 
 			let editButton = document.getElementsByClassName('edit');
 			Array.from(editButton).forEach(function(element){
@@ -159,7 +158,7 @@
 			});
 
 			function editRequest(){
-				let page_name = $(this).parent().siblings()[0].innerHTML;
+				let page_name = $(this).parent().siblings().first().text();
 				$('#editModal').modal("show");
 				$('.close').click(function(){
 					$('#editModal').modal("hide");
@@ -210,7 +209,7 @@
 					url: "{{ url_for('pages_edit_request') }}",
 					success: function(result){
 						document.getElementById('page-name').value = result.page_name;
-						document.getElementById('page-url').value = result.page_url;
+						document.getElementById('url-slug').value = result.url_slug;
 						if (result.meta_title){
 							document.getElementById('title').value = result.meta_title;
 						}
@@ -223,8 +222,6 @@
 						if (result.meta_robots){
 
 							let values = result.meta_robots.split(',');
-
-							console.log(values);
 
 							$('#robots').select2().val(values).trigger('change');
 						}
@@ -243,19 +240,9 @@
 						
 						
 						
-						
-						
-						
-						
 						document.getElementsByClassName('modal-title')[0].innerHTML = result.page_name;
 
-						let submit_button = document.getElementById('submit-form');
 
-						submit_button.addEventListener('click', function(){
-							crop();
-
-						
-						})
 
 						if (result.og_image){
 							let url = '/static/crop_images/'
@@ -263,6 +250,11 @@
 							$('.image-preview').attr('src', url);
 							$('.image-preview').show();
 						}
+
+
+						let save_button = document.getElementById('submit-form');
+
+						save_button.addEventListener('click', form_submit);
 
 			
 
@@ -275,77 +267,33 @@
 				
 			}
 
-			let image_div = $('#image-div').croppie({
-				enableExif:true, 	
-				viewport: {
-					width:300,
-					height:200,
-					type: 'square'
-				},
-				boundary: {
-					width:400,
-					height:300
-				}
-			});
+			
+
+			function form_submit(){
+
+
+				$('.edit-form').submit();
+
+
+			}
 
 			$(document).on('change', '#image-input', show_image)
 
-			
+			function show_image(event){
 
-			function show_image(){
-				$('.image-preview').hide();
-				if (this.files.length==0){
-					$('.image-preview').show();
-					$('#image-div').hide();
+				let reader = new  FileReader()
+
+				reader.onload = function(){
+
+					$('#image-bin').attr('value', reader.result);
 				}
-				else{
-					let a = this.files[0]['name'].split('.');
-					console.log(a[a.length-1]);
-					if (['jpg', 'png', 'jpeg'].includes(a[a.length-1])){
-						var reader = new FileReader()
-						reader.onload = function(event){
 
-							image_div.croppie('bind',{
+				reader.readAsDataURL(event.target.files[0]);
 
-							url:event.target.result,
-							
-							});
-						};
-							
-						reader.readAsDataURL( this.files[0] );
-						$('#image-div').show();
-					}
-					
-				}
-				
-			}
-
-
-
-			function crop(){
-				image_div.croppie("result", {
-					type:'canvas',
-					size:'viewport'
-				}).then(function(response){
-					$.ajax({
-						type:'POST',
-						url: "{{ url_for('save_og_image') }}",
-						data:{'image':response},
-						success: function(result){
-
-							var input = document.createElement('input');
-							$(input).attr("type", "hidden")
-							          .attr("name", "image_name")
-							          .attr("value", result['image_name'])
-							          .appendTo(".edit-form");
-							$('.edit-form').submit();
-						}
-					})
-
-				})
 			}
 
 			
+
 		})
 
 		

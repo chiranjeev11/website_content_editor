@@ -6,21 +6,7 @@ import os
 from flask_login import current_user, login_user, logout_user, login_required
 from app.form import LoginForm
 
-@login_required
-@app.route('/admin/og-picture', methods=['GET', 'POST'])
-def save_og_image():
 
-	image = request.form['image']
-
-	data  = image.split(';')
-
-	if len(data)>1:
-
-		a = save_picture(image)
-
-		return jsonify({'image_name':a})
-
-	return jsonify({'image_name':None})
 
 
 @app.route('/')
@@ -85,6 +71,8 @@ def admin_logout():
 @app.route('/admin')
 @login_required
 def admin():
+
+	print('hello')
 
 	return redirect(url_for('pages'))
 
@@ -164,7 +152,10 @@ def pages_edit_request():
 
 	if request.form:
 
+
 		data = request.form['data']
+
+
 
 
 
@@ -185,7 +176,7 @@ def pages_edit_request():
 	if meta_obj:
 
 		formData = {'page_name':page.page_name,
-					'page_url':'localhost:5000'+page.page_url,
+					'url_slug':page.slug,
 					'meta_title':meta_obj.title,
 					'meta_description':meta_obj.description,
 					'meta_keywords':meta_obj.keywords,
@@ -198,7 +189,7 @@ def pages_edit_request():
 					}
 	else:
 
-		formData = {'page_name':page.page_name,'page_url':page.page_url}
+		formData = {'page_name':page.page_name,'url_slug':page.slug}
 
 	return jsonify(formData)
 
@@ -213,6 +204,7 @@ def flash_messages():
 	return jsonify({'message':'done'})
 
 
+
 @login_required
 @app.route('/admin/metaContent/edit', methods=['GET', 'POST'])
 def metaContent_edit():
@@ -221,10 +213,6 @@ def metaContent_edit():
 	data = request.form
 
 	page = Pages.query.filter_by(page_name=data['page_name']).first()
-
-	for key in data:
-
-		print(key, data[key])
 
 	
 	if page.metaContent:
@@ -247,15 +235,23 @@ def metaContent_edit():
 
 		meta_obj.og_description = data['og_description']
 
-		if data['image_name']:
+		page.slug = data['url_slug']
+
+		if data['image_bin']:
+
+			image = data['image_bin']
+
+			image_name = save_picture(image)
 
 			if meta_obj.og_image:
+
+				print(meta_obj.og_image)
 
 				image_path = os.path.join(app.root_path, 'static/crop_images', meta_obj.og_image)
 
 				os.remove(image_path)
 
-			meta_obj.og_image = data['image_name']
+			meta_obj.og_image = image_name
 
 		db.session.add(meta_obj)
 

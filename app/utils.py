@@ -4,6 +4,7 @@ from PIL import Image
 from io import BytesIO
 import base64
 from app import app
+# from app.models import Pages
 
 def save_picture(form_picture):
 
@@ -27,3 +28,11 @@ def save_picture(form_picture):
 	img.save(picture_path)
 
 	return picture_fn
+
+# def dynamic_url_slug(rule,page_name):
+
+# 	page = Pages.query.filter_by(page_name=page_name).first()
+
+# 	view_function = page.view_function
+
+# 	app.add_url_rule(rule, view_function)

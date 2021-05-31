@@ -33,7 +33,9 @@ class Pages(db.Model):
 
 	page_url = db.Column(db.String(55))
 
-	is_model = db.Column(db.Integer)
+	view_function = db.Column(db.String(55))
+
+	slug = db.Column(db.String(55))
 
 	metaContent = db.relationship('Meta_Content', backref='page')
 
