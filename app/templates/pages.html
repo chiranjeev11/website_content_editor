@@ -3,7 +3,7 @@
 {% block content %}
 
 	
-
+<!-- <i class="fas fa-edit"></i> -->
 	<table class="table">
 		<thead>
 			<tr>
@@ -17,7 +17,7 @@
 			<tr>
 				<td><a href="{{ page.slug }}">{{ page.page_name }}</a></td>
 				<td>{{ page.slug }}</td>
-				<td><a type="button" class="edit" title="edit page"><i class="fas fa-edit"></i></a></td>
+				<td><a type="button" class="edit btn btn-primary" title="edit page"><span>Edit Meta Tags</span></td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -36,7 +36,7 @@
 		  <div class="modal-body">
 			<form class="edit-form" action="{{ url_for('metaContent_edit') }}" method="post">
 				<div class="row">
-					<div class="col">
+					<div class="col-md">
 						<div class="form-group m-2">
 							<label for="page-name">Page Name</label>
 							<input type="text" class="form-control" id="page-name" name="page_name" placeholder="Enter Page Name" readonly>
@@ -68,7 +68,7 @@
 						
 						
 					</div>
-					<div class="col">
+					<div class="col-md">
 						<div class="form-group m-2">
 							<label for="url-slug">Url Slug</label>
 							<input type="text" class="form-control" id="url-slug" name="url_slug" placeholder="Enter Page Url Slug">
@@ -210,31 +210,31 @@
 					success: function(result){
 						document.getElementById('page-name').value = result.page_name;
 						document.getElementById('url-slug').value = result.url_slug;
-						if (result.meta_title){
+						if (result.meta_title!='undefined'){
 							document.getElementById('title').value = result.meta_title;
 						}
-						if (result.meta_description){
+						if (result.meta_description!='undefined'){
 							document.getElementById('description').value = result.meta_description;
 						}
-						if (result.meta_keywords){
+						if (result.meta_keywords!='undefined'){
 							document.getElementById('keywords').value = result.meta_keywords;
 						}
-						if (result.meta_robots){
+						if (result.meta_robots!='undefined'){
 
 							let values = result.meta_robots.split(',');
 
 							$('#robots').select2().val(values).trigger('change');
 						}
-						if (result.meta_canonical){
+						if (result.meta_canonical!='undefined'){
 							document.getElementById('canonical').value = result.meta_canonical;
 						}
-						if (result.og_type){
+						if (result.og_type!='undefined'){
 							document.getElementById('type').value = result.og_type;
 						}
-						if (result.og_title){
+						if (result.og_title!='undefined'){
 							document.getElementById('ogtitle').value = result.og_title;
 						}
-						if (result.og_description){
+						if (result.og_description!='undefined'){
 							document.getElementById('ogdescription').value = result.og_description;
 						}
 						
