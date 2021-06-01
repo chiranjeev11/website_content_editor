@@ -72,8 +72,6 @@ def admin_logout():
 @login_required
 def admin():
 
-	print('hello')
-
 	return redirect(url_for('pages'))
 
 
@@ -146,8 +144,9 @@ def terms_conditions():
 	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path)
 
 
-@login_required
+
 @app.route('/admin/pages/edit-request', methods=['GET', 'POST'])
+@login_required
 def pages_edit_request():
 
 	if request.form:
@@ -193,8 +192,9 @@ def pages_edit_request():
 
 	return jsonify(formData)
 
-@login_required
+
 @app.route('/flash_messages')
+@login_required
 def flash_messages():
 
 	message = request.args.get('message')
@@ -205,8 +205,9 @@ def flash_messages():
 
 
 
-@login_required
+
 @app.route('/admin/metaContent/edit', methods=['GET', 'POST'])
+@login_required
 def metaContent_edit():
 
 

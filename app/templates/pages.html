@@ -3,7 +3,7 @@
 {% block content %}
 
 	
-<!-- <i class="fas fa-edit"></i> -->
+
 	<table class="table">
 		<thead>
 			<tr>
@@ -49,7 +49,8 @@
 						
 						<div class="form-group m-2">
 							<label for="keywords">Meta Keywords</label>
-							<input type="text" class="form-control" id="keywords" name="meta_keywords" placeholder="Enter Keywords   eg - coding,programing">
+							<input type="text" class="form-control recommand" id="keywords" name="meta_keywords" placeholder="Enter Keywords   eg - coding,programing">
+							<span class="small recommandation keywords" style="color:yellowgreen;display: none;">10 words recommanded</span>
 						</div>
 						
 						<div class="form-group m-2">
@@ -75,7 +76,8 @@
 						</div>
 						<div class="form-group m-2">
 							<label for="description">Meta Description</label>
-							<input type="text" class="form-control check" id="description" name="meta_description" placeholder="Enter Description">
+							<input type="text" class="form-control check recommand" id="description" name="meta_description" placeholder="Enter Description">
+							<span class="small recommandation description" style="color:yellowgreen;display: none;">50-160 characters recommanded</span>
 						</div>
 						<div class="form-group m-2">
 							<label for="robots">Meta Robots</label><br>
@@ -101,11 +103,12 @@
 						</div>
 						<div class="form-group m-2">
 							<label for="ogdescription">OG:Description</label>
-							<input type="text" class="form-control" id="ogdescription" name="og_description" placeholder="Enter og description">
+							<input type="text" class="form-control recommand" id="ogdescription" name="og_description" placeholder="Enter og description">
+							<span class="small recommandation ogdescription" style="color:yellowgreen;display: none;">50-160 characters recommanded</span>
 						</div>
 						<div class="form-group m-2 form-check">
-								<input type="checkbox" class="form-check-input" id="description-checkbox">
-								<label class="form-check-label small" for="description-checkbox">Same as meta description</label>
+							<input type="checkbox" class="form-check-input" id="description-checkbox">
+							<label class="form-check-label small" for="description-checkbox">Same as meta description</label>
 						</div>
 					</div>
 					<div class="form-group m-2">
@@ -279,6 +282,8 @@
 
 			$(document).on('change', '#image-input', show_image)
 
+			$(document).on('input', '.recommand', add_recommandation)
+
 			function show_image(event){
 
 				let reader = new  FileReader()
@@ -291,6 +296,47 @@
 				reader.readAsDataURL(event.target.files[0]);
 
 			}
+
+			function add_recommandation (event){
+
+				
+
+				if (event.target.id=='description'){
+					if (event.target.value.length>160 || event.target.value.length<50){
+						console.log('50-160')
+						$('.description').show();
+					}
+					else{
+						$('.description').hide();
+					}
+				}
+
+				if (event.target.id=='ogdescription'){
+					if (event.target.value.length>160 || event.target.value.length<50){
+						console.log('50-160')
+						$('.ogdescription').show();
+					}
+					else{
+						$('.ogdescription').hide();
+					}
+				}
+
+				if (event.target.id=='keywords'){
+
+					let words = event.target.value.split(',').length;
+
+					if (words>10){
+						console.log('10 keywords');
+						$('.keywords').show();
+					}
+					else{
+						$('.keywords').hide();
+					}
+				}
+
+
+			}
+
 
 			
 
