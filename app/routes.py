@@ -4,7 +4,7 @@ from app.utils import save_picture
 from app import app, login, db
 import os
 from flask_login import current_user, login_user, logout_user, login_required
-from app.form import LoginForm
+from app.form import LoginForm, ChangePasswordForm, EditProfileForm
 
 
 
@@ -144,6 +144,71 @@ def terms_conditions():
 	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path)
 
 
+@app.route('/admin/edit_profile', methods=['GET', 'POST'])
+@login_required
+def admin_profile():
+
+	form = EditProfileForm()
+
+	user = User.query.filter_by(username=current_user.username).first()
+
+	if form.validate_on_submit():
+
+		user.username = form.username.data
+
+		user.name = form.name.data
+
+		user.phone = form.contact.data 
+
+		user.email = form.email.data
+
+		db.session.add(user)
+
+		db.session.commit()
+
+		flash('Details Edited Successfully')
+
+
+	return render_template('admin_profile.html', form=form, user=user)
+
+@app.route('/admin/change_password', methods=['POST', 'GET'])
+@login_required
+def admin_change_password():
+
+	form = ChangePasswordForm()
+
+	user = User.query.filter_by(username=current_user.username).first()
+
+	if form.validate_on_submit():
+
+		if user.check_password(form.old_password.data):
+
+			if form.new_password.data == form.confirm_new_password.data:
+
+				user.set_password(form.new_password.data)
+
+				db.session.add(user)
+
+				db.session.commit()
+
+				flash('Your password has been updated')
+
+
+			else:
+
+				flash('new passwords does not match')
+
+		else:
+
+			flash('Enter correct password')
+
+		return redirect(url_for('admin_change_password'))
+
+
+
+	return render_template('admin_change_password.html', form=form)
+
+
 
 @app.route('/admin/pages/edit-request', methods=['GET', 'POST'])
 @login_required
@@ -153,10 +218,6 @@ def pages_edit_request():
 
 
 		data = request.form['data']
-
-
-
-
 
 	else:
 

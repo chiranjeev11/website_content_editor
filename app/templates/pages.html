@@ -17,7 +17,7 @@
 			<tr>
 				<td><a href="{{ page.slug }}">{{ page.page_name }}</a></td>
 				<td>{{ page.slug }}</td>
-				<td><a type="button" class="edit btn btn-primary" title="edit page"><span>Edit Meta Tags</span></td>
+				<td><button class="edit btn btn-primary" title="edit page">Edit Meta Tags</button></td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -36,7 +36,7 @@
 		  <div class="modal-body">
 			<form class="edit-form" action="{{ url_for('metaContent_edit') }}" method="post">
 				<div class="row">
-					<div class="col-md">
+					<div class="col">
 						<div class="form-group m-2">
 							<label for="page-name">Page Name</label>
 							<input type="text" class="form-control" id="page-name" name="page_name" placeholder="Enter Page Name" readonly>
@@ -69,7 +69,7 @@
 						
 						
 					</div>
-					<div class="col-md">
+					<div class="col">
 						<div class="form-group m-2">
 							<label for="url-slug">Url Slug</label>
 							<input type="text" class="form-control" id="url-slug" name="url_slug" placeholder="Enter Page Url Slug">
@@ -111,16 +111,18 @@
 							<label class="form-check-label small" for="description-checkbox">Same as meta description</label>
 						</div>
 					</div>
-					<div class="form-group m-2">
+				</div>
+				<div class="row">
+					<div class="form-group m-2 col">
 						<label for="image-input">OG:Image</label>
 						<input type="hidden" name="image_bin" id="image-bin">
 						<input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="image-input" name="og_image">
 					</div>
-					<div class="d-flex justify-content-center">
+				</div>
+				<div class="row">
+					<div>
 						<img class="image-preview" height="100%" width="100%" src="">
 					</div>
-					
-
 				</div>
 			</form>
 		  </div>
@@ -161,40 +163,18 @@
 			});
 
 			function editRequest(){
+
 				let page_name = $(this).parent().siblings().first().text();
-				$('#editModal').modal("show");
-				$('.close').click(function(){
-					$('#editModal').modal("hide");
-					window.location = "{{ url_for('pages') }}";
-				})
+				$('#editModal').modal('show');
+
+
 
 				let checkboxes = document.getElementsByClassName('form-check-input');
 
 				let title_description = document.getElementsByClassName('check');
 
 
-				function check(){
-
-							let check1 = document.getElementById("title-checkbox").checked;
-							let check2 = document.getElementById("description-checkbox").checked;
-
-
-							if(check1){
-								document.getElementById('ogtitle').value = document.getElementById('title').value;
-								document.getElementById('ogtitle').readOnly = true;
-
-							}
-							else{
-								document.getElementById('ogtitle').readOnly = false;
-							}
-							if(check2){
-								document.getElementById('ogdescription').value = document.getElementById('description').value;
-								document.getElementById('ogdescription').readOnly = true;
-							}
-							else{
-								document.getElementById('ogdescription').readOnly = false;
-							}
-				}
+				
 
 
 				Array.from(checkboxes).forEach(function(element) {
@@ -270,6 +250,38 @@
 				
 			}
 
+
+			$(document).on('change', '#image-input', show_image)
+
+			$(document).on('input', '.recommand', add_recommandation)
+
+			$(document).on('input', '#url-slug', slug_validation)
+
+
+
+			function check(){
+
+					let check1 = document.getElementById("title-checkbox").checked;
+					let check2 = document.getElementById("description-checkbox").checked;
+
+
+					if(check1){
+						document.getElementById('ogtitle').value = document.getElementById('title').value;
+						document.getElementById('ogtitle').readOnly = true;
+
+					}
+					else{
+						document.getElementById('ogtitle').readOnly = false;
+					}
+					if(check2){
+						document.getElementById('ogdescription').value = document.getElementById('description').value;
+						document.getElementById('ogdescription').readOnly = true;
+					}
+					else{
+						document.getElementById('ogdescription').readOnly = false;
+					}
+				}
+
 			
 
 			function form_submit(){
@@ -280,9 +292,7 @@
 
 			}
 
-			$(document).on('change', '#image-input', show_image)
 
-			$(document).on('input', '.recommand', add_recommandation)
 
 			function show_image(event){
 
@@ -334,6 +344,13 @@
 					}
 				}
 
+
+			}
+
+
+			function slug_validation(event){
+
+				console.log(/^(\/[a-z-]+)+\/?$/.test($('url-slug').val()));
 
 			}
 

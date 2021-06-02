@@ -9,7 +9,11 @@ class User(db.Model, UserMixin):
 
 	username = db.Column(db.String(55))
 
+	name = db.Column(db.String(55))
+
 	email = db.Column(db.String(255))
+
+	phone = db.Column(db.String(25))
 
 	password_hash = db.Column(db.String(255))
 
