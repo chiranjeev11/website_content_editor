@@ -73,6 +73,7 @@
 						<div class="form-group m-2">
 							<label for="url-slug">Url Slug</label>
 							<input type="text" class="form-control" id="url-slug" name="url_slug" placeholder="Enter Page Url Slug">
+							<span class="small url-slug" style="color:red;display:none;">Invalid URL Slug</span>
 						</div>
 						<div class="form-group m-2">
 							<label for="description">Meta Description</label>
@@ -282,12 +283,17 @@
 					}
 				}
 
+
+			var slug_validate = true;
 			
 
 			function form_submit(){
 
+				if (slug_validate){
+					$('.edit-form').submit();
+				}
 
-				$('.edit-form').submit();
+				
 
 
 			}
@@ -313,7 +319,7 @@
 
 				if (event.target.id=='description'){
 					if (event.target.value.length>160 || event.target.value.length<50){
-						console.log('50-160')
+
 						$('.description').show();
 					}
 					else{
@@ -323,7 +329,7 @@
 
 				if (event.target.id=='ogdescription'){
 					if (event.target.value.length>160 || event.target.value.length<50){
-						console.log('50-160')
+
 						$('.ogdescription').show();
 					}
 					else{
@@ -336,7 +342,7 @@
 					let words = event.target.value.split(',').length;
 
 					if (words>10){
-						console.log('10 keywords');
+
 						$('.keywords').show();
 					}
 					else{
@@ -350,7 +356,14 @@
 
 			function slug_validation(event){
 
-				console.log(/^(\/[a-z-]+)+\/?$/.test($('url-slug').val()));
+				if (/^(\/[a-z-]+)+\/?$/.test($('#url-slug').val()) == false){
+					$('.url-slug').show();
+					slug_validate = false;
+				}
+				else{
+					$('.url-slug').hide();
+					slug_validate = true;
+				}
 
 			}
 
