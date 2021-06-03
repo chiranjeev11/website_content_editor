@@ -307,8 +307,6 @@ def metaContent_edit():
 
 			if meta_obj.og_image:
 
-				print(meta_obj.og_image)
-
 				image_path = os.path.join(app.root_path, 'static/crop_images', meta_obj.og_image)
 
 				os.remove(image_path)

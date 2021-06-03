@@ -19,20 +19,9 @@ def save_picture(form_picture):
 
 	picture_path = os.path.join(app.root_path, 'static/crop_images', picture_fn)
 
-	output_size = (125, 125)
-
 	img = Image.open(form_picture)
-
-	img.thumbnail(output_size)
 
 	img.save(picture_path)
 
 	return picture_fn
 
-# def dynamic_url_slug(rule,page_name):
-
-# 	page = Pages.query.filter_by(page_name=page_name).first()
-
-# 	view_function = page.view_function
-
-# 	app.add_url_rule(rule, view_function)
