@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, Response
 from app.models import Pages, Meta_Content, User
 from app.utils import save_picture
 from app import app, login, db
@@ -11,7 +11,11 @@ from app.form import LoginForm, ChangePasswordForm, EditProfileForm
 @app.route('/sitemap.xml')
 def sitemap():
 
-	return render_template('sitemap.xml')
+	xml = render_template('sitemap.xml')
+
+	return Response(xml, mimetype='text/xml')
+
+	
 
 @app.route('/robots.txt')
 def robots():
