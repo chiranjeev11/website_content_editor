@@ -13,8 +13,8 @@ def sitemap():
 
 	return render_template('sitemap.xml')
 
-@app.route('/robots')
-def sitemap():
+@app.route('/robots.txt')
+def robots():
 
 	return render_template('robots.txt')
 
