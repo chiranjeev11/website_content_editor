@@ -13,7 +13,7 @@ def sitemap():
 
 	xml = render_template('sitemap.xml')
 
-	return Response(xml, mimetype='text/xml')
+	return Response(xml, mimetype='application/xml')
 
 	
 
