@@ -17,7 +17,7 @@
 			<tr>
 				<td><a href="{{ page.slug }}">{{ page.page_name }}</a></td>
 				<td>{{ page.slug }}</td>
-				<td><button class="edit btn btn-primary" title="edit page">Edit Meta Tags</button></td>
+				<td><button class="edit mr-md-n5 btn btn-primary" title="edit page">Edit Meta Tags</button></td>
 			</tr>
 			{% endfor %}
 		</tbody>
@@ -260,9 +260,18 @@
 
 			$(document).on('click', '.view-image', view_image)
 
-
+			var image_status = 'view';
 			function view_image(){
 				$('.image-preview').fadeToggle();
+				if (image_status=='view'){
+					$('.view-image').text('Hide Image');
+					image_status = 'hide';
+				}
+				else{
+					$('.view-image').text('View Image');
+					image_status = 'view';
+				}
+				
 			}
 
 

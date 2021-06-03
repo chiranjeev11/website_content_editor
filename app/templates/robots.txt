@@ -1,5 +1,6 @@
 User-agent: *
+
+Allow: /
 Allow: /fees_ISA
 Disallow: /privacy-policy
 Disallow: /terms_conditions
-Allow: /
