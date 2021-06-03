@@ -1,0 +1,32 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+<url>
+<loc>https://18.116.53.228/</loc>
+<lastmod>2021-04-12T19:14:08+00:00</lastmod>
+<priority>1.00</priority>
+</url>
+<url>
+<loc>https://18.116.53.228/fees_ISA</loc>
+<lastmod>2021-02-05T13:13:10+00:00</lastmod>
+<priority>0.80</priority>
+</url>
+<url>
+<loc>https://18.116.53.228/terms_conditions</loc>
+<lastmod>2021-02-05T13:13:12+00:00</lastmod>
+<priority>0.70</priority>
+</url>
+<url>
+<loc>https://18.116.53.228/privacy-policy</loc>
+<lastmod>2021-02-05T13:13:12+00:00</lastmod>
+<priority>0.70</priority>
+</url>
+</urlset>
+
+<!-- 
+<meta rel="canonical" content="http://awakinn.com">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Awakinn">
+<meta property="og:description" content="This is a website">
+<meta property="og:image" content="image url">
+
+<meta property="twitter:cards" content="website"> -->

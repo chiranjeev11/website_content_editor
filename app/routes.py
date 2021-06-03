@@ -8,6 +8,15 @@ from app.form import LoginForm, ChangePasswordForm, EditProfileForm
 
 
 
+@app.route('/sitemap.xml')
+def sitemap():
+
+	return render_template('sitemap.xml')
+
+@app.route('/robots')
+def sitemap():
+
+	return render_template('robots.txt')
 
 @app.route('/')
 def index():
