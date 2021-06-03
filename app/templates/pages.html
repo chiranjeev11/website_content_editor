@@ -118,6 +118,7 @@
 						<label for="image-input">OG:Image</label>
 						<input type="hidden" name="image_bin" id="image-bin">
 						<input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="image-input" name="og_image">
+						<span class="small recommandation ogimage" style="color:yellowgreen;display: none;"> 1280pixels x 627pixels</span>
 					</div>
 				</div>
 				<div class="row">
@@ -323,7 +324,13 @@
 				reader.onload = function(){
 					let img = new Image;
 					img.onload = function(e){
-						console.log(img.height, img.width)
+						if (img.height>700 || img.height<550 || img.width>1350 || img.width<1200){
+							$('.ogimage').text(`1280pixels x 627pixels recommanded. Your image dimension is ${img.width} x ${img.height}`);
+							$('.ogimage').show();
+						}
+						else{
+							$('.ogimage').hide()
+						}
 					}
 					img.src = reader.result;
 					$('#image-bin').attr('value', img.src);
@@ -333,7 +340,11 @@
 
 			}
 
-			function add_recommandation (event){
+			function image_recommandation(width, height){
+				$('.ogimage').show()
+			}
+
+			function add_recommandation(event){
 
 				
 
