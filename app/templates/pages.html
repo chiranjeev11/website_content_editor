@@ -15,7 +15,7 @@
 		<tbody>
 			{% for page in page_names %}
 			<tr>
-				<td><a href="{{ page.slug }}">{{ page.page_name }}</a></td>
+				<td><a href="{{ page.slug }}" target="_blank">{{ page.page_name }}</a></td>
 				<td>{{ page.slug }}</td>
 				<td class="button-block"><button class="edit btn btn-primary" title="edit page">Edit Meta Tags</button></td>
 			</tr>
@@ -261,12 +261,8 @@
 
 			$(document).on('click', '.view-image', view_image)
 
-			$(document).on('input', '.contact', validate_phone_number)
 
 
-			// function validate_phone_number(e){
-				
-			// }
 
 			var image_status = 'view';
 

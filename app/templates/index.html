@@ -24,6 +24,9 @@
 	{% if page.canonical %}
 	<meta rel="canonical" content="{{ page.canonical }}">
 	{% endif %}
+	{% if page.og_description %}
+	<meta property="og:description" content="{{ page.og_description }}">
+	{% endif %}
 	{% if page.robots %}
 	<meta name="robots" content="{{ page.robots }}">
 	{% endif %}
