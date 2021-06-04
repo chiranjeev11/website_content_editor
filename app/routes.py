@@ -57,7 +57,7 @@ def admin_login():
 
 		if user is None or not user.check_password(form.password.data):
 
-			flash('Incorrect Login Details')
+			flash('Incorrect Login Details', 'error')
 
 			return redirect(url_for('admin_login'))
 
@@ -179,7 +179,7 @@ def admin_profile():
 
 		db.session.commit()
 
-		flash('Details Edited Successfully')
+		flash('Details Edited Successfully', 'message')
 
 
 	return render_template('admin_profile.html', form=form, user=user)
@@ -204,16 +204,16 @@ def admin_change_password():
 
 				db.session.commit()
 
-				flash('Your password has been updated')
+				flash('Your password has been updated', 'message')
 
 
 			else:
 
-				flash('new passwords does not match')
+				flash('new passwords does not match', 'error')
 
 		else:
 
-			flash('Enter correct password')
+			flash('Enter correct password', 'error')
 
 		return redirect(url_for('admin_change_password'))
 
@@ -265,17 +265,6 @@ def pages_edit_request():
 		formData = {'page_name':page.page_name,'url_slug':page.slug}
 
 	return jsonify(formData)
-
-
-@app.route('/flash_messages')
-@login_required
-def flash_messages():
-
-	message = request.args.get('message')
-
-	flash(message)
-
-	return jsonify({'message':'done'})
 
 
 
@@ -342,7 +331,7 @@ def metaContent_edit():
 
 		db.session.commit()
 
-	flash('Your changes have been saved')
+	flash('Your changes have been saved', 'message')
 
 
 	return redirect(url_for('pages'))

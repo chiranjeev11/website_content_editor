@@ -4,7 +4,7 @@
 
 	
 
-	<table class="table mt-5">
+	<table class="table mt-5 shadow">
 		<thead>
 			<tr>
 				<th scope="col">Page Name</th>
@@ -260,6 +260,13 @@
 			$(document).on('input', '#url-slug', slug_validation)
 
 			$(document).on('click', '.view-image', view_image)
+
+			$(document).on('input', '.contact', validate_phone_number)
+
+
+			// function validate_phone_number(e){
+				
+			// }
 
 			var image_status = 'view';
 

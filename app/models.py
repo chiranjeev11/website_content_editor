@@ -7,11 +7,11 @@ class User(db.Model, UserMixin):
 
 	id = db.Column(db.Integer, primary_key=True)
 
-	username = db.Column(db.String(55))
+	username = db.Column(db.String(55), unique=True)
 
 	name = db.Column(db.String(55))
 
-	email = db.Column(db.String(255))
+	email = db.Column(db.String(255), unique=True)
 
 	phone = db.Column(db.String(25))
 
