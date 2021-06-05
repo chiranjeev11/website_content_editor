@@ -3,8 +3,8 @@
 {% block content %}
 
 	
-	<div class="position-absolute">
-		<div class="loader" style="display:none;"></div>
+	<div>
+		<div class="loader" style="display: none;"></div>
 	</div>
 
 	<table class="table mt-5 shadow">
@@ -142,6 +142,7 @@
 	<script>
 
 		$(document).ready(function(){
+
 
 			$('body').on('shown.bs.modal', '.modal', function() {
 			  $(this).find('#robots').each(function() {

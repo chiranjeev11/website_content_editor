@@ -18,6 +18,8 @@ login = LoginManager(app)
 
 login.login_view = 'admin_login'
 
+login.login_message_category = "info"
+
 
 from app import models, routes
 
