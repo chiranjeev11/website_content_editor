@@ -391,7 +391,7 @@
 
 			function slug_validation(event){
 
-				if (/^(\/[a-z-]+)+\/?$/.test($('#url-slug').val()) == false){
+				if (/^\/([a-z-]+)+\/?$/.test($('#url-slug').val()) == false){
 					$('.url-slug').show();
 					slug_validate = false;
 				}
