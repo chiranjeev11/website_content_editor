@@ -175,7 +175,7 @@
 				document.querySelector('.loader').style.display = 'block';
 
 				let page_name = $(this).parent().siblings().first().text();
-				$('#editModal').modal('show');
+				
 
 
 
@@ -246,6 +246,8 @@
 						document.querySelector('body').style.opacity = 1;
 						
 						document.querySelector('.loader').style.display = 'none';
+
+						$('#editModal').modal('show');
 
 
 						let save_button = document.getElementById('submit-form');
