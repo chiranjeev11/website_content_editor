@@ -35,6 +35,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	{% if title %}
 	<title>{{ title }}</title>
 	{% else %}
@@ -42,19 +43,77 @@
 	{% endif %}
 </head>
 <body>
-	<nav class="navbar navbar-expand-md navbar-light bg-light">
-		<div class="container">
-			<a href="#" class="navbar-brand">Awakinn Project</a>
-			<button class="navbar-toggler" data-bs-toggle='collapse' data-bs-target="#navbarContent"aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarContent">
+	<div class="component-main">
+		<nav class="navbar navbar-expand-lg shadow-sm pb-1" id="navbar">
+			<div class="container">
+				<a class="navbar-brand" id="logo" href="https://awakinn.com"><img  class="editable img-logo" src="images/logo_2.png" width="120" alt="logo" query-selector=".component-main .img-logo"></a>
+				<a class="button nav-link btn contact_btn px-3 ml-auto mr-3 d-block d-lg-none typeform-share a-applynow editable" href="https://form.typeform.com/to/wzbh8PkD?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .applynow">Apply Now</a> 
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="border: none; background: #3726A6; color: #fff;"><i class="fas fa-bars"></i></button>
+				<div class="collapse navbar-collapse justify-content-end py-4 py-lg-0" id="collapsibleNavbar">
+					<ul class="navbar-nav">
+						<li class="nav-item mr-3">
+							<a class="nav-link nav_btn a-fees editable" href="fees.htm" query-selector=".component-main .a-fees">Fees &amp; ISA</a>
+						</li>
+						<li class="nav-item mr-5">
+							<a class="nav-link nav_btn typeform-share a-hire" href="https://form.typeform.com/to/GK8sI20t?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .a-hire">Hire from us</a>
+						</li>
+
+						<li class="nav-item py-2 py-lg-0 d-none d-lg-block">						
+							<a class="button nav-link btn contact_btn px-3 typeform-share a-apply editable" href="https://form.typeform.com/to/wzbh8PkD?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .a-apply">Apply Now</a> 
+						</li>
+					</ul>
+				</div>
+			</div>  
+		</nav>
+		<div class="d-flex align-content-center flex-wrap" id="home_">
+			<div class="container-fluid">
+				<div class="col-lg-8 offset-lg-2 my-4 mt-5 pt-5 text-center">
+					<h1 id="get_head" class="h1-getjob editable" query-selector=".component-main .h1-getjob" contenteditable="True">Get Job. Pay Later<sup>*</sup></h1>
+					<h1 class="mt-2 h1-become editable" id="home_head" query-selector=".component-main .h1-become">Become a Software Engineer</h1>
+					<p class="home_desc pt-2 p-learn editable" query-selector=".component-main .p-learn">Learn from professionals working in tech giants and pay after getting a job of minimum <mark>₹5 LPA</mark></p>
+					<a href="#curriculum" class="btn mt-3 px-4 py-2 shadow _action_btn_apply a-explore editable" query-selector=".component-main .a-explore">Explore Our Programs</a>
+				</div>
+				<div class="col-lg-6 offset-lg-3 my-5 text-center">
+					<img src="images/landing_img.png" class="img-landing_img editable" id="landing_img" alt="software engineering" query-selector=".component-main img-landing_img">
+				</div>
 			</div>
 		</div>
-	</nav>
-	<div class="container">
-		<h1>Heading</h1>
-		<a href="{{ url_for('privacy_policy') }}">Privacy Redirect</a>
+		<div class="container-fluid pt-4 pb-5 p-md-5" id="requirements">
+			<div class="col-lg-8 offset-lg-2">
+				<p class="requirements_text pt-3 p-aspire editable" query-selector=".component-main .p-aspire">
+					Aspire to become a coder? Start learning with Awakinn and grab the best!
+				</p>
+				<div class="row pt-4">
+					<div class="col-md-6">
+						<p class="requirements_point_head p-whatyouget editable" query-selector=".component-main .p-whatyouget">
+							What you get:
+						</p>
+						<p class="requirements_points p-requiredpoints editable" query-selector=".component-main .p-requiredpoints">
+							<i class="fas fa-check-circle"></i> Become a Software Engineer
+							<br><i class="fas fa-check-circle"></i> Pay after getting a job*
+							<br><i class="fas fa-check-circle"></i> Live interactive sessions
+							<br><i class="fas fa-check-circle"></i> Interview Preparation
+							<br><i class="fas fa-check-circle"></i> 24*7 Access
+							<br><i class="fas fa-check-circle"></i> Flexible Timings
+							<br><i class="fas fa-check-circle"></i> Anytime Doubt Sessions
+							<br><i class="fas fa-check-circle"></i> Live Projects
+							<br><i class="fas fa-check-circle"></i> Open Source Contribution
+						</p>
+					</div>
+					<div class="col-md-6 pt-4 pt-md-0">
+						<p class="requirements_point_head p-requirements editable" query-selector=".component-main .p-requirements">
+							Requirements:
+						</p>
+						<p class="requirements_points p-getpoints editable" query-selector=".component-main .p-getpoints">
+							<i class="fas fa-arrow-alt-circle-right"></i> No coding background required
+							<br><i class="fas fa-arrow-alt-circle-right"></i> Personal laptop
+							<br><i class="fas fa-arrow-alt-circle-right"></i> Stable internet connection
+							<br><i class="fas fa-arrow-alt-circle-right"></i> Passion to learn
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 </html>

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, Response
-from app.models import Pages, Meta_Content, User
+from app.models import Pages, Meta_Content, User, Elements, Attributes
 from app.utils import save_picture
 from app import app, login, db
 import os
@@ -27,6 +27,13 @@ def index():
 
 	page = Pages.query.filter_by(page_name='Home Page').first()
 
+	elements = Elements.query.filter_by(page_id=page.id).all()
+
+	query_selectors = {}
+
+	for element in elements:
+
+		query_selectors[element.query_selector] = element.text
 
 	meta_obj = page.metaContent[0]
 
@@ -39,7 +46,7 @@ def index():
 
 		image_path = None
 
-	return render_template('index.html', page=meta_obj, image_path=image_path)
+	return render_template('index.html', page=meta_obj, image_path=image_path, query_selectors=query_selectors)
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -95,7 +102,7 @@ def pages():
 
 	page_names = Pages.query.all()
 
-	return render_template('pages.html', page_names=page_names)
+	return render_template('pages.html', page_names=page_names, title="Pages")
 
 
 @app.route('/privacy-policy')
@@ -116,7 +123,7 @@ def privacy_policy():
 
 		image_path = None
 
-	return render_template('privacy_policy.html', page=meta_obj, image_path=image_path)
+	return render_template('privacy_policy.html', page=meta_obj, image_path=image_path, title='Privacy Policy')
 
 
 @app.route('/fees_ISA')
@@ -134,7 +141,7 @@ def fees_page():
 
 		image_path = None
 
-	return render_template('privacy_policy.html', page=meta_obj, image_path=image_path)
+	return render_template('fees.html', page=meta_obj, image_path=image_path, title="Fees and ISA")
 
 @app.route('/terms_conditions')
 def terms_conditions():
@@ -154,7 +161,126 @@ def terms_conditions():
 
 		image_path = None
 
-	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path)
+	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path, title="Terms and Conditions")
+
+
+@app.route('/admin/pages/editContent', methods=['GET', 'POST'])
+@login_required
+def edit_Content():
+
+	if request.form:
+
+		element_html = request.form['element_html']
+
+		element_selector = request.form['element-selector']
+
+		element = Elements.query.filter_by(query_selector=element_selector).first()
+
+		for attribute in element.attributes:
+
+			attribute.attribute_value = request.form[attribute.attribute]
+
+			db.session.add(attribute)
+
+		element.text = element_html
+
+		db.session.add(element)
+
+		db.session.commit()
+
+		flash('Content updated succesfully', 'message')
+
+	
+
+	return render_template('editContent.html', title="Edit Content")
+
+
+
+
+@app.route('/admin/pages/contentResuest', methods=['GET', 'POST'])
+@login_required
+def content_Request():
+
+	elements = Elements.query.filter_by(page_id=7).all()
+
+	query_selectors = {}
+
+	for element in elements:
+
+		attributes = {}
+
+		for attribute in element.attributes:
+
+			attributes[attribute.attribute] = attribute.attribute_value
+
+		query_selectors[element.query_selector] = [element.text, attributes]
+
+	return jsonify({'query_selectors':query_selectors})
+
+
+@app.route('/admin/pages/loadContentRequest', methods=['GET', 'POST'])
+@login_required
+def loadContentRequest():
+
+	selector = request.form['data']
+
+	element = Elements.query.filter_by(query_selector=selector).first()
+
+	text = element.text
+
+	return jsonify({'text':text})
+
+@app.route('/admin/pages/addAttributesRequest', methods=['GET', 'POST'])
+@login_required
+def add_attributes_request():
+
+	query_selectors = request.json['data']
+
+	for query_selector in query_selectors:
+
+		element = Elements.query.filter_by(query_selector=query_selector).first()
+
+		attributes = query_selectors[query_selector]
+
+		for attribute in attributes:
+
+			attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
+
+			db.session.add(attr)
+
+	db.session.commit()
+
+	return jsonify({'result':'done'})
+
+
+@app.route('/admin/pages/addelementsRequest', methods=['GET', 'POST'])
+@login_required
+def add_elements_request():
+
+	query_selectors = request.json['data']
+
+	for query_selector in query_selectors:
+
+		element = Elements.query.filter_by(query_selector=query_selector).first()
+
+		if element:
+
+			element.text = query_selectors[query_selector]
+
+			element.query_selector = query_selector
+
+		else:
+
+			element_type = query_selector.split()[1].split('-')[0]
+
+			element = Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=7)
+		
+		db.session.add(element)
+
+	db.session.commit()
+
+	return jsonify({'result':'done'})
+
 
 
 @app.route('/admin/edit_profile', methods=['GET', 'POST'])
@@ -182,7 +308,7 @@ def admin_profile():
 		flash('Details Edited Successfully', 'message')
 
 
-	return render_template('admin_profile.html', form=form, user=user)
+	return render_template('admin_profile.html', form=form, user=user, title="Edit Profile")
 
 @app.route('/admin/change_password', methods=['POST', 'GET'])
 @login_required
@@ -219,7 +345,7 @@ def admin_change_password():
 
 
 
-	return render_template('admin_change_password.html', form=form)
+	return render_template('admin_change_password.html', form=form, title="Change Password")
 
 
 

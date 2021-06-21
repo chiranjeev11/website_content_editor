@@ -49,9 +49,6 @@ class Pages(db.Model):
 
 
 
-
-
-
 class Meta_Content(db.Model):
 
 	id = db.Column(db.Integer, primary_key=True)
@@ -75,3 +72,53 @@ class Meta_Content(db.Model):
 	canonical = db.Column(db.String(255))
 
 	robots = db.Column(db.String(255))
+
+
+
+class Elements(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	page_id = db.Column(db.Integer, db.ForeignKey('pages.id'))
+
+	element_type = db.Column(db.String(255))
+
+	text = db.Column(db.Text)
+
+	query_selector = db.Column(db.String(255))
+
+	attributes = db.relationship('Attributes', backref='element')
+
+class Attributes(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	element_id = db.Column(db.Integer, db.ForeignKey('elements.id'))
+
+	attribute = db.Column(db.String(255))
+
+	attribute_value = db.Column(db.String(255))
+
+
+class Styles(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	element_id = db.Column(db.Integer, db.ForeignKey('elements.id'))
+
+	style_attr = db.Column(db.String(255))
+
+	style_value = db.Column(db.String(255))
+
+
+
+
+
+
+
+
+
+
+
+
+
