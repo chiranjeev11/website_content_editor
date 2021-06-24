@@ -198,13 +198,14 @@ $(document).ready(function(){
 
 			function show_image(event){
 
-				let reader = new  FileReader()
+
+				let reader = new FileReader();
 
 				reader.onload = function(){
 					let img = new Image;
 					img.onload = function(e){
 						if (img.height>700 || img.height<550 || img.width>1350 || img.width<1200){
-							$('.ogimage').text(`1280pixels x 627pixels recommanded. Your image dimension is ${img.width} x ${img.height}`);
+							$('.ogimage').text(`1280pixels x 627pixels recommended. Your image dimension is ${img.width} x ${img.height}`);
 							$('.ogimage').show();
 						}
 						else{

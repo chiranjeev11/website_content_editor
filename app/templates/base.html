@@ -43,8 +43,15 @@
 			0% { transform: rotate(0deg); }
 			100% { transform: rotate(360deg); }
 			}
+		.h1-getjob{
+			color: red;
+		}
 	</style>
 </head>
+ 	<div>
+		<div class="loader" style="display: none;"></div>
+	</div>
+
 <body>
 	<nav class="navbar navbar-expand-md navbar-light bg-light">
 		<div class="container">
@@ -125,8 +132,7 @@
 	        {% endwith %}
 		</div>
 	</div>
-	 
-	<div class="container">
+	<div class="container loader-hide">
 		{% block content %}
 		{% endblock %}
 	</div>

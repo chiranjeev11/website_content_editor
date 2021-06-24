@@ -6,7 +6,7 @@ import base64
 from app import app
 # from app.models import Pages
 
-def save_picture(form_picture):
+def save_picture(form_picture, img_path):
 
 	form_picture = form_picture.split(",")[1]
 	form_picture = BytesIO( base64.b64decode(form_picture) )
@@ -17,7 +17,7 @@ def save_picture(form_picture):
 
 	picture_fn = random_hex + f_ext
 
-	picture_path = os.path.join(app.root_path, 'static/crop_images', picture_fn)
+	picture_path = os.path.join(app.root_path, img_path, picture_fn)
 
 	img = Image.open(form_picture)
 

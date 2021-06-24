@@ -76,6 +76,7 @@
 	</div>
 </div>
 
+
 <div class="modal fade" id="editContentModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
 	<div class="modal-content">
@@ -86,40 +87,78 @@
 		</button>
 	  </div>
 	  <div class="modal-body">
-		<form class="modal-form" method="POST" action="{{ url_for('edit_Content') }}">
-				<div class="container-fluid">
-					<div class="row" id="modal-form-elements">
-						<textarea class="modal-text form-control" name="element_html" width="400px"></textarea>
-						<input type="hidden" class="element-selector" name="element-selector">
-						<div class="modal-form-attributes">
-							
+			<form class="modal-form" method="POST" action="{{ url_for('edit_Content') }}">
+				<input type="hidden" class="element-selector" name="element-selector">
+					<div class="container-fluid">
+						<ul class="nav nav-tabs" role="tablist">
+						  <li class="nav-item">
+						    <a class="nav-link" href="#text-content" id="text-tab" data-toggle="tab" role="tab" aria-controls="text-content" aria-selected="true">Text</a>
+						  </li>
+						  <li class="nav-item">
+						    <a class="nav-link" href="#attribute-content" id="attribute-tab" data-toggle="tab" role="tab" aria-controls="attribute-content" aria-selected="true">Attributes</a>
+						  </li>
+						  <li class="nav-item">
+						    <a class="nav-link disabled" href="#style-content" id="style-tab" data-toggle="tab" role="tab" aria-controls="style-content" aria-selected="true">Style</a>
+						  </li>
+						</ul>
+						<!-- Tab contents -->
+						<div class="tab-content" id="TabContent">
+						  <div class="tab-pane fade show active" id="text-content" role="tabpanel" aria-labelledby="text-tab">
+						  	<textarea class="modal-text form-control mt-3" name="element_html" width="400px"></textarea>
+						  	<input class="modal-image-upload" type="file" name="image_file">
+						  	<input type="hidden" name="image_bin" class="modal-image-bin">
+						  </div>
+						  <div class="tab-pane fade" id="attribute-content" role="tabpanel" aria-labelledby="attribute-tab">
+						  	<div class="modal-form-attributes">
+									
+								</div>
+								<div class="modal-form-addattributes">
+									<div class="modal-form-addattributes">
+										<div class="form-group form-inline">
+											<label>Attribute Name</label>
+											<input type="text" name="attribute_name" class="form-control ml-2">
+										</div>
+										<div class="form-group form-inline">
+											<label>Attrubute Value</label>
+											<input type="text" name="attribute_value" class=" ml-2 form-control">
+										</div>
+									</div>
+								</div>
+						  </div>
+						  <div class="tab-pane fade" id="style-content" role="tabpanel" aria-labelledby="style-tab">Style</div>
 						</div>
 					</div>
-				</div>
-		</form>
+			</form>
 	  </div>
 	  <div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		<button type="button" class="btn btn-primary form-submit-modal">Save changes</button>
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			<button type="button" class="btn btn-primary form-submit-modal">Save changes</button>
 	  </div>
-	</div>
   </div>
+</div>
 </div>
 
 <script>
 	
 	$(document).ready(function(){
 
+		document.querySelector('.loader-hide').style.opacity = 0;
+		
+		document.querySelector('.loader').style.display = 'block';
+
 
 		$.ajax({
-			url:'/admin/pages/contentResuest',
+			url:'/admin/pages/contentRequest',
 			success: function(result){
 				for (let selector in result['query_selectors']){
 					$(selector).html(result['query_selectors'][selector][0])
-					$.each(document.querySelector(selector).attributes, function(){
-						this.value = result['query_selectors'][selector][1][this.name]
+					$.each(result['query_selectors'][selector][1], function(i){
+						$(selector).attr(i, this)
 					})
 				}
+				document.querySelector('.loader-hide').style.opacity = 1;
+						
+				document.querySelector('.loader').style.display = 'none';
 			}
 		})
 
@@ -173,10 +212,34 @@
 		// 	contentType: 'application/json',
 		// 	data: JSON.stringify({'data':query_selectors})
 		// })
+
+		$(document).on('change', '.modal-image-upload', function(){
+			let reader = new FileReader();
+
+				reader.onload = function(){
+					$('.modal-image-bin').val(reader.result)
+				}
+
+				reader.readAsDataURL($('.modal-image-upload')[0].files[0]);
+		})
 		
+
 		$('.editable').on('click', function(e){
 
 			let querySelector = $(e.target).attr('query-selector');
+
+			if (e.target.tagName=='IMG'){
+				$('#text-tab').text('Upload Image')
+				$('.modal-text').hide();
+				$('.modal-image-upload').show();
+
+				
+			}
+			else{
+				$('#text-tab').text('Text');
+				$('.modal-text').show();
+				$('.modal-image-upload').hide();
+			}
 
 			$('.element-selector').val(querySelector);
 			$('.modal-text').val($(querySelector).html());

@@ -170,19 +170,59 @@ def edit_Content():
 
 	if request.form:
 
-		element_html = request.form['element_html']
+		element_html = None
 
-		element_selector = request.form['element-selector']
+		attribute_name = None
 
-		element = Elements.query.filter_by(query_selector=element_selector).first()
+		image_name = None
 
-		for attribute in element.attributes:
+		for item in request.form:
 
-			attribute.attribute_value = request.form[attribute.attribute]
+			if item=='element_html':
+
+				element_html = request.form['element_html']
+
+			elif item=='element-selector':
+
+				element_selector = request.form['element-selector']
+
+				element = Elements.query.filter_by(query_selector=element_selector).first()
+
+				for attribute in element.attributes:
+
+					attribute.attribute_value = request.form[attribute.attribute]
+
+					db.session.add(attribute)
+
+			elif item == 'attribute_name':
+
+				attribute_name = request.form['attribute_name']
+
+				attribute_value = request.form['attribute_value']
+
+			elif item=='image_bin' and request.form['image_bin']:
+
+				image_name = save_picture(request.form['image_bin'], 'static/content_images')
+
+		if attribute_name:
+
+			attribute = Attributes(element_id=element.id, attribute=attribute_name, attribute_value=attribute_value)
 
 			db.session.add(attribute)
 
-		element.text = element_html
+		if element_html:
+
+			element.text = element_html	
+
+		if image_name:
+
+			for attribute in element.attributes:
+
+				if attribute.attribute=='src':
+
+					attribute.attribute_value = '/static/content_images/'+image_name
+
+					break
 
 		db.session.add(element)
 
@@ -197,7 +237,7 @@ def edit_Content():
 
 
 
-@app.route('/admin/pages/contentResuest', methods=['GET', 'POST'])
+@app.route('/admin/pages/contentRequest', methods=['GET', 'POST'])
 @login_required
 def content_Request():
 
@@ -431,7 +471,7 @@ def metaContent_edit():
 
 			image = data['image_bin']
 
-			image_name = save_picture(image)
+			image_name = save_picture(image, 'static/crop_images')
 
 			if meta_obj.og_image:
 
