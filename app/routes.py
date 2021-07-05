@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, Response
-from app.models import Pages, Meta_Content, User, Elements, Attributes
+from app.models import Pages, Meta_Content, User, Elements, Attributes, Styles
 from app.utils import save_picture
 from app import app, login, db
 import os
@@ -168,6 +168,14 @@ def terms_conditions():
 @login_required
 def edit_Content():
 
+	add_attributes = []
+
+	add_styles = []
+
+	attributes_edit = []
+
+	attributes_delete = []
+
 	if request.form:
 
 		element_html = None
@@ -188,31 +196,79 @@ def edit_Content():
 
 				element = Elements.query.filter_by(query_selector=element_selector).first()
 
-				for attribute in element.attributes:
+				# for attribute in element.attributes:
 
-					attribute.attribute_value = request.form[attribute.attribute]
+				# 	if attribute.attribute!='query-selector':
 
-					db.session.add(attribute)
+				# 		attribute.attribute_value = request.form[attribute.attribute]
 
-			elif item == 'attribute_name':
+				# 		db.session.add(attribute)
 
-				attribute_name = request.form['attribute_name']
+				# for style in element.styles:
 
-				attribute_value = request.form['attribute_value']
+				# 	print(style.style_attr)
+
+				# 	style.style_value = request.form[style.style_attr]
+
+			elif item.split('-')[0] == 'deleteattr':
+
+				attributes_delete.append(item.split('-')[1])
+
+			elif item.split('-')[0] == 'attr':
+
+				attributes_edit.append(item.split('-')[1])
+
+			elif item.split('-')[0] == 'addattribute_name':
+
+				add_attributes.append(request.form[item])
+
+			elif item.split('-')[0] == 'addstyle_name':
+
+				add_styles.append(request.form[item])
 
 			elif item=='image_bin' and request.form['image_bin']:
 
 				image_name = save_picture(request.form['image_bin'], 'static/content_images')
 
-		if attribute_name:
+		if attributes_delete:
 
-			attribute = Attributes(element_id=element.id, attribute=attribute_name, attribute_value=attribute_value)
+			for attribute in attributes_delete:
 
-			db.session.add(attribute)
+				attr_delete = Attributes.query.filter_by(element_id=element.id, attribute=attribute).first()
+
+				db.session.delete(attr_delete)
+
+		if attributes_edit:
+
+			for attribute in attributes_edit:
+
+				if attribute!='style':
+
+					attr_edit = Attributes.query.filter_by(element_id=element.id, attribute=attribute).first()
+
+					attr_edit.attribute_value = request.form['attr'+'-'+attribute]
+
+					db.session.add(attr_edit)
+
+		if add_attributes:
+
+			for attribute in add_attributes:
+
+				attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=request.form['addattribute_value'+'-'+attribute])
+
+				db.session.add(attr)
+
+		if add_styles:
+
+			for style in styles:
+
+				style_obj = Styles(element_id=element.id, style_attr=style, style_value=request.form['addstyle_value'+'-'+style])
+
+				db.session.add(style_obj)
 
 		if element_html:
 
-			element.text = element_html	
+			element.text = element_html
 
 		if image_name:
 
@@ -249,11 +305,17 @@ def content_Request():
 
 		attributes = {}
 
+		styles = {}
+
 		for attribute in element.attributes:
 
 			attributes[attribute.attribute] = attribute.attribute_value
 
-		query_selectors[element.query_selector] = [element.text, attributes]
+		for style in element.styles:
+
+			styles[style.style_attr] = style.style_value
+
+		query_selectors[element.query_selector] = [element.text, attributes, styles]
 
 	return jsonify({'query_selectors':query_selectors})
 

@@ -5,7 +5,7 @@
 	<div class="component-main">
 		<nav class="navbar navbar-expand-lg shadow-sm pb-1" id="navbar">
 			<div class="container">
-				<a class="navbar-brand" id="logo" href="https://awakinn.com"><img  class="editable img-logo" src="images/logo_2.png" width="120" alt="logo" query-selector=".component-main .img-logo"></a>
+				<a class="navbar-brand" id="logo" href="#"><img  class="editable img-logo" src="images/logo_2.png" width="120" alt="logo" query-selector=".component-main .img-logo"></a>
 				<a class="button nav-link btn contact_btn px-3 ml-auto mr-3 d-block d-lg-none typeform-share a-applynow editable" href="https://form.typeform.com/to/wzbh8PkD?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .a-applynow">Apply Now</a> 
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="border: none; background: #3726A6; color: #fff;"><i class="fas fa-bars"></i></button>
 				<div class="collapse navbar-collapse justify-content-end py-4 py-lg-0" id="collapsibleNavbar">
@@ -33,7 +33,7 @@
 					<a href="#curriculum" class="btn mt-3 px-4 py-2 shadow _action_btn_apply a-explore editable" query-selector=".component-main .a-explore">Explore Our Programs</a>
 				</div>
 				<div class="col-lg-6 offset-lg-3 my-5 text-center">
-					<img src="images/landing_img.png" class="img-landing_img editable" id="landing_img" alt="software engineering" query-selector=".component-main .img-landing_img">
+					<img src="images/landing_img.png" class="img-landing_img img-fluid editable" id="landing_img" alt="software engineering" query-selector=".component-main .img-landing_img">
 				</div>
 			</div>
 		</div>
@@ -81,7 +81,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
 	<div class="modal-content">
 	  <div class="modal-header">
-		<h5 class="modal-title" id="editModalLabel">Modal title</h5>
+		<h5 class="modal-title" id="editModalLabel">Edit Content</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		  <span aria-hidden="true">&times;</span>
 		</button>
@@ -98,7 +98,7 @@
 						    <a class="nav-link" href="#attribute-content" id="attribute-tab" data-toggle="tab" role="tab" aria-controls="attribute-content" aria-selected="true">Attributes</a>
 						  </li>
 						  <li class="nav-item">
-						    <a class="nav-link disabled" href="#style-content" id="style-tab" data-toggle="tab" role="tab" aria-controls="style-content" aria-selected="true">Style</a>
+						    <a class="nav-link" href="#style-content" id="style-tab" data-toggle="tab" role="tab" aria-controls="style-content" aria-selected="true">Style</a>
 						  </li>
 						</ul>
 						<!-- Tab contents -->
@@ -109,23 +109,33 @@
 						  	<input type="hidden" name="image_bin" class="modal-image-bin">
 						  </div>
 						  <div class="tab-pane fade" id="attribute-content" role="tabpanel" aria-labelledby="attribute-tab">
+						  	<p class="small mt-2 field-empty-message" style="color:red;display: none;">All fields are required *</p>
 						  	<div class="modal-form-attributes">
 									
 								</div>
-								<div class="modal-form-addattributes">
-									<div class="modal-form-addattributes">
-										<div class="form-group form-inline">
-											<label>Attribute Name</label>
-											<input type="text" name="attribute_name" class="form-control ml-2">
-										</div>
-										<div class="form-group form-inline">
-											<label>Attrubute Value</label>
-											<input type="text" name="attribute_value" class=" ml-2 form-control">
-										</div>
-									</div>
+								<hr>
+								<div class="modal-form-added-attributes">
+									
+								</div>
+								<button type="button" class="btn btn-outline-primary add-attributes-button mt-2">Add Attributes</button>
+								<div class="modal-form-add-attributes">
+
 								</div>
 						  </div>
-						  <div class="tab-pane fade" id="style-content" role="tabpanel" aria-labelledby="style-tab">Style</div>
+						  <div class="tab-pane fade" id="style-content" role="tabpanel" aria-labelledby="style-tab">
+						  	<p class="small mt-2 field-empty-message" style="color:red;display: none;">All fields are required *</p>
+						  	<div class="modal-form-styles">
+						  		
+						  	</div>
+						  	<hr>
+								<div class="modal-form-added-styles">
+									
+								</div>
+								<button type="button" class="btn btn-outline-primary add-styles-button mt-2">Add Styles</button>
+								<div class="modal-form-add-styles">
+
+								</div>
+						  </div>
 						</div>
 					</div>
 			</form>
@@ -147,13 +157,17 @@
 		document.querySelector('.loader').style.display = 'block';
 
 
+
 		$.ajax({
 			url:'/admin/pages/contentRequest',
 			success: function(result){
 				for (let selector in result['query_selectors']){
 					$(selector).html(result['query_selectors'][selector][0])
 					$.each(result['query_selectors'][selector][1], function(i){
-						$(selector).attr(i, this)
+						$(selector).attr(i, this);
+					})
+					$.each(result['query_selectors'][selector][2], function(i){
+						$(selector).css(i, this);
 					})
 				}
 				document.querySelector('.loader-hide').style.opacity = 1;
@@ -213,6 +227,125 @@
 		// 	data: JSON.stringify({'data':query_selectors})
 		// })
 
+
+		// $(document).on('change', '.attribute-name', function(){
+
+		// })
+
+		$(document).on('click', '.delete-attribute', function(e){
+			e.target.parentElement.parentElement.style['display'] = 'none';
+
+			let input_field = $(e.target).parent().siblings('input.form-control');
+
+			input_field.attr('name', 'deleteattr'+'-'+input_field.attr('name').split('-')[1]);
+
+		})
+
+		$(document).on('click', '.remove-attribute', function(){
+			$(this).parent().remove();
+		})
+		let count = 0;
+
+		$(document).on('click', '.attribute-add', function(){
+
+
+			if ($('.attribute-name').val()!="" && $('.attribute-value').val()!=""){
+				let attribute = `<div class="added-attributes shadow p-3">
+													<div class="form-group form-inline">
+													<label>Attribute Name</label>
+													<input type="text" name="addattribute_name-${$('.attribute-name').val()}" class="ml-2 form-control" value="${$('.attribute-name').val()}">
+												</div>
+												<div class="form-group form-inline">
+													<label>Attrubute Value</label>
+													<input type="text" name="addattribute_value-${$('.attribute-name').val()}" class="ml-2 form-control" value="${$('.attribute-value').val()}">
+												</div>
+												<button type="button" class="btn btn-danger remove-attribute">Remove</button>
+											 </div>`;
+				$('.modal-form-add-attributes').empty();
+				$('.add-attributes-button').show();
+				$('.modal-form-added-attributes').append(attribute);
+			}
+			else{
+				$('.field-empty-message').show();
+			}
+
+		})
+
+		$(document).on('click', '.style-add', function(){
+
+
+			if ($('.style-name').val()!="" && $('.style-value').val()!=""){
+				let style = `<div class="added-styles shadow p-3">
+													<div class="form-group form-inline">
+													<label>Style Name</label>
+													<input type="text" name="addstyle_name-${$('.style-name').val()}" class="ml-2 form-control" value="${$('.style-name').val()}">
+												</div>
+												<div class="form-group form-inline">
+													<label>Style Value</label>
+													<input type="text" name="addstyle_value-${$('.style-name').val()}" class="ml-2 form-control" value="${$('.style-value').val()}">
+												</div>
+												<button type="button" class="btn btn-danger remove-style">Remove</button>
+											 </div>`;
+				$('.modal-form-add-styles').empty();
+				$('.add-styles-button').show();
+				$('.modal-form-added-styles').append(style);
+			}
+			else{
+				$('.field-empty-message').show();
+			}
+
+		})
+
+		$(document).on('click', '.attribute-cancel', function(){
+			$('.modal-form-add-attributes').empty();
+			$('.add-attributes-button').show();
+		})
+
+		$(document).on('click', '.style-cancel', function(){
+			$('.modal-form-add-styles').empty();
+			$('.add-styles-button').show();
+		})
+
+		$(document).on('click', '.add-attributes-button', function(){
+			$('.add-attributes-button').hide();
+			let add_attribute = `<div class="form-group mt-3">
+														<label>Attribute Name</label>
+														<input type="text" class=" form-control attribute-name">
+														
+													</div>
+													
+													<div class="form-group">
+														<label>Attrubute Value</label>
+														<input type="text" class="form-control attribute-value">
+											
+													</div>
+													
+													<button type="button" class="btn btn-outline-primary mt-2 mr-2 attribute-add">Add</button>
+													<button type="button" class="btn btn-outline-danger attribute-cancel mt-2">Cancel</button>`;
+
+			$('.modal-form-add-attributes').append(add_attribute);
+
+		})
+
+		$(document).on('click', '.add-styles-button', function(){
+			$('.add-styles-button').hide();
+			let add_style = `<div class="form-group mt-3">
+														<label>Style Name</label>
+														<input type="text" class=" form-control style-name">
+														
+													</div>
+													
+													<div class="form-group">
+														<label>Style Value</label>
+														<input type="text" class="form-control style-value">
+											
+													</div>
+													
+													<button type="button" class="btn btn-outline-primary mt-2 mr-2 style-add">Add</button>
+													<button type="button" class="btn btn-outline-danger style-cancel mt-2">Cancel</button>`;
+			$('.modal-form-add-styles').append(add_style);
+		})
+
 		$(document).on('change', '.modal-image-upload', function(){
 			let reader = new FileReader();
 
@@ -244,14 +377,28 @@
 			$('.element-selector').val(querySelector);
 			$('.modal-text').val($(querySelector).html());
 			$('.modal-form-attributes').empty();
+			$('.modal-form-styles').empty();
 			$.each(e.target.attributes, function(){
-				
-				let attribute = `<div class="form-group mt-2 form-inline">
-									<label>${this.name}</label>
-									<input type="text" class="form-control ml-2" value="${this.value}" name="${this.name}">
-								</div>`
-				$('.modal-form-attributes').append(attribute);
 
+				if (this.name!='id' && this.name!='class' && this.name!='query-selector'){
+					let attribute = `<div class="form-group mt-2 form-inline">
+									<label>${this.name}</label>
+									<input type="text" class="form-control ml-2" value="${this.value}" name="attr-${this.name}">
+									<a><i class="btn delete-attribute far fa-trash-alt"></i></a>
+								</div>`
+					$('.modal-form-attributes').append(attribute);
+				}
+
+			})
+
+			$.each(e.target.style, function(){
+
+				let style = `<div class="form-group mt-2 form-inline">
+									<label>${this}</label>
+									<input type="text" class="form-control ml-2" value="${e.target.style[this]}" name="${this}">
+									<a><i class="btn delete-style far fa-trash-alt"></i></a>
+								</div>`;
+				$('.modal-form-styles').append(style);
 			})
 			$('#editContentModal').modal('show');
 
@@ -259,6 +406,8 @@
 
 
 		$(document).on('click', '.form-submit-modal', function(){
+
+
 
 			$('.modal-form').submit();
 

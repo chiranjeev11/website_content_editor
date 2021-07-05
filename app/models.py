@@ -89,6 +89,8 @@ class Elements(db.Model):
 
 	attributes = db.relationship('Attributes', backref='element')
 
+	styles = db.relationship('Styles', backref='element_style')
+
 class Attributes(db.Model):
 
 	id = db.Column(db.Integer, primary_key=True)
