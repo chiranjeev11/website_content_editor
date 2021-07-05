@@ -176,6 +176,10 @@ def edit_Content():
 
 	attributes_delete = []
 
+	styles_delete = []
+
+	styles_edit = []
+
 	if request.form:
 
 		element_html = None
@@ -196,19 +200,13 @@ def edit_Content():
 
 				element = Elements.query.filter_by(query_selector=element_selector).first()
 
-				# for attribute in element.attributes:
+			elif item.split('-')[0] == 'style':
 
-				# 	if attribute.attribute!='query-selector':
+				styles_edit.append(item.split('-')[1])
 
-				# 		attribute.attribute_value = request.form[attribute.attribute]
+			elif item.split('-')[0] == 'deletestyle':
 
-				# 		db.session.add(attribute)
-
-				# for style in element.styles:
-
-				# 	print(style.style_attr)
-
-				# 	style.style_value = request.form[style.style_attr]
+				styles_delete.append(item.split('-')[1])
 
 			elif item.split('-')[0] == 'deleteattr':
 
@@ -230,6 +228,15 @@ def edit_Content():
 
 				image_name = save_picture(request.form['image_bin'], 'static/content_images')
 
+		if styles_delete:
+
+			for style in styles_delete:
+
+
+				style_delete = Styles.query.filter_by(element_id=element.id, style_attr=style).first()
+
+				db.session.delete(style_delete)
+
 		if attributes_delete:
 
 			for attribute in attributes_delete:
@@ -237,6 +244,16 @@ def edit_Content():
 				attr_delete = Attributes.query.filter_by(element_id=element.id, attribute=attribute).first()
 
 				db.session.delete(attr_delete)
+
+		if styles_edit:
+
+			for style in styles_edit:
+
+				style_edit = Styles.query.filter_by(element_id=element.id, style_attr=style).first()
+
+				style_edit.style_value = request.form['style'+'-'+style]
+
+				db.session.add(style_edit)
 
 		if attributes_edit:
 
@@ -260,7 +277,7 @@ def edit_Content():
 
 		if add_styles:
 
-			for style in styles:
+			for style in add_styles:
 
 				style_obj = Styles(element_id=element.id, style_attr=style, style_value=request.form['addstyle_value'+'-'+style])
 

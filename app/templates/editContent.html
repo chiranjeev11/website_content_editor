@@ -232,6 +232,14 @@
 
 		// })
 
+		$(document).on('click', '.delete-style', function(e){
+			e.target.parentElement.parentElement.style['display'] = 'none';
+
+			let input_field = $(e.target).parent().siblings('input.form-control');
+
+			input_field.attr('name', 'deletestyle'+'-'+input_field.attr('name').split('-')[1]);
+		})
+
 		$(document).on('click', '.delete-attribute', function(e){
 			e.target.parentElement.parentElement.style['display'] = 'none';
 
@@ -310,13 +318,13 @@
 			$('.add-attributes-button').hide();
 			let add_attribute = `<div class="form-group mt-3">
 														<label>Attribute Name</label>
-														<input type="text" class=" form-control attribute-name">
+														<input type="text" class=" form-control attribute-name" required>
 														
 													</div>
 													
 													<div class="form-group">
 														<label>Attrubute Value</label>
-														<input type="text" class="form-control attribute-value">
+														<input type="text" class="form-control attribute-value" required>
 											
 													</div>
 													
@@ -331,13 +339,13 @@
 			$('.add-styles-button').hide();
 			let add_style = `<div class="form-group mt-3">
 														<label>Style Name</label>
-														<input type="text" class=" form-control style-name">
+														<input type="text" class=" form-control style-name" required>
 														
 													</div>
 													
 													<div class="form-group">
 														<label>Style Value</label>
-														<input type="text" class="form-control style-value">
+														<input type="text" class="form-control style-value" required>
 											
 													</div>
 													
@@ -383,7 +391,7 @@
 				if (this.name!='id' && this.name!='class' && this.name!='query-selector'){
 					let attribute = `<div class="form-group mt-2 form-inline">
 									<label>${this.name}</label>
-									<input type="text" class="form-control ml-2" value="${this.value}" name="attr-${this.name}">
+									<input type="text" class="form-control ml-2" value="${this.value}" name="attr-${this.name}" required>
 									<a><i class="btn delete-attribute far fa-trash-alt"></i></a>
 								</div>`
 					$('.modal-form-attributes').append(attribute);
@@ -395,7 +403,7 @@
 
 				let style = `<div class="form-group mt-2 form-inline">
 									<label>${this}</label>
-									<input type="text" class="form-control ml-2" value="${e.target.style[this]}" name="${this}">
+									<input type="text" class="form-control ml-2" value="${e.target.style[this]}" name="style-${this}" required>
 									<a><i class="btn delete-style far fa-trash-alt"></i></a>
 								</div>`;
 				$('.modal-form-styles').append(style);
@@ -406,8 +414,6 @@
 
 
 		$(document).on('click', '.form-submit-modal', function(){
-
-
 
 			$('.modal-form').submit();
 
