@@ -461,7 +461,7 @@ def add_attributes_request():
 
 	for query_selector in query_selectors:
 
-		element = Draft_Elements.query.filter_by(query_selector=query_selector).first()
+		element = Elements.query.filter_by(query_selector=query_selector).first()
 
 		attributes = query_selectors[query_selector]
 
@@ -484,7 +484,7 @@ def add_elements_request():
 
 	for query_selector in query_selectors:
 
-		element = Draft_Elements.query.filter_by(query_selector=query_selector).first()
+		element = Elements.query.filter_by(query_selector=query_selector).first()
 
 		if element:
 
