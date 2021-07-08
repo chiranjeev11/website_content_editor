@@ -467,7 +467,7 @@ def add_attributes_request():
 
 		for attribute in attributes:
 
-			attr = Attributes(draft_element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
+			attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
 
 			db.session.add(attr)
 
