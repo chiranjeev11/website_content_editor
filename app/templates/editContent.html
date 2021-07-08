@@ -1,7 +1,16 @@
+
 {% extends 'base.html' %}
 
 {% block content %}
+
+<button id='publish_button' class="btn btn-outline-primary mt-2">Publish</button>
+
+<button id="register_attributes" class="btn btn-primary">Register Attributes</button>
+
+<button id="register_querySelectors" class="btn btn-primary">Register Query Selector</button>
+
 <div class="shadow mt-5" style="text-align:center;">
+	<!-- {% block page %} -->
 	<div class="component-main">
 		<nav class="navbar navbar-expand-lg shadow-sm pb-1" id="navbar">
 			<div class="container">
@@ -74,6 +83,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- {% endblock %} -->
 </div>
 
 
@@ -156,10 +166,19 @@
 		
 		document.querySelector('.loader').style.display = 'block';
 
+		var page_status = 'saved';
+
+		if (page_status=='saved'){
+			$('#publish_button').removeClass('disabled');
+		}
+		else{
+			$('#publish_button').addClass('disabled')
+		}
+
 
 
 		$.ajax({
-			url:'/admin/pages/contentRequest',
+			url:'/admin/pages/draftContentRequest',
 			success: function(result){
 				for (let selector in result['query_selectors']){
 					$(selector).html(result['query_selectors'][selector][0])
@@ -180,57 +199,80 @@
 
 // For registering attributes of elements in database
 
-		// let query_selectors = {}
+		$(document).on('click', '#register_attributes', function(){
+			let query_selectors = {}
 
-		// for (let i of $('.editable')){
-		// 	let selector = $(i).attr('query-selector');
-		// 	let attribute = {}
-		// 	$.each(i.attributes, function(){
+		for (let i of $('.editable')){
+			let selector = $(i).attr('query-selector');
+			let attribute = {}
+			$.each(i.attributes, function(){
 
-		// 		attribute[this.name] = this.value;
+				attribute[this.name] = this.value;
 
-		// 	})
-		// 	query_selectors[selector] = attribute
-		// }
+			})
+			query_selectors[selector] = attribute
+		}
 
-		// console.log(query_selectors);
+		console.log(query_selectors);
 
 
-		// $.ajax({
-		// 	type:'POST',
-		// 	url:'/admin/pages/addAttributesRequest',
-		// 	success:function(result){
-		// 		console.log(result);
-		// 	},
-		// 	contentType: 'application/json',
-		// 	data: JSON.stringify({'data':query_selectors})
-		// })
+		$.ajax({
+			type:'POST',
+			url:'/admin/pages/addAttributesRequest',
+			success:function(result){
+				console.log(result);
+			},
+			contentType: 'application/json',
+			data: JSON.stringify({'data':query_selectors})
+		})
+		})
 
 // For registering query selectors of editables
 
-		// let query_selectors = {}
+		$(document).on('click', '#register_querySelectors', function(){
+			let query_selectors = {}
 
-		// for (let i of $('.editable')){
-		// 	query_selectors[$(i).attr('query-selector')] = $(i).html();
-		// }
+		for (let i of $('.editable')){
+			query_selectors[$(i).attr('query-selector')] = $(i).html();
+		}
 
-		// console.log(query_selectors);
-
-
-		// $.ajax({
-		// 	type:'POST',
-		// 	url:'/admin/pages/addelementsRequest',
-		// 	success:function(result){
-		// 		console.log(result);
-		// 	},
-		// 	contentType: 'application/json',
-		// 	data: JSON.stringify({'data':query_selectors})
-		// })
+		console.log(query_selectors);
 
 
-		// $(document).on('change', '.attribute-name', function(){
+		$.ajax({
+			type:'POST',
+			url:'/admin/pages/addelementsRequest',
+			success:function(result){
+				console.log(result);
+			},
+			contentType: 'application/json',
+			data: JSON.stringify({'data':query_selectors})
+		})
 
-		// })
+
+		})
+
+		$('#publish_button').on('click', function(){
+
+			setTimeout(function(){
+				setTimeout(function() {
+					$(".alert").alert('close');
+				}, 3000);
+			})
+
+			$.ajax({
+				type:"POST",
+				url:"/admin/pages/editContent/publish",
+				success: function(result){
+					page_status = 'published';
+					$('#messages_show').append(`<div class="alert alert-success alert-dismissible fade show" role="alert">
+				  Changes have been publshed !
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>`)
+				}
+			})		
+
+		})
 
 		$(document).on('click', '.delete-style', function(e){
 			e.target.parentElement.parentElement.style['display'] = 'none';
@@ -399,18 +441,23 @@
 
 			})
 
-			$.each(e.target.style, function(){
-
-				let style = `<div class="form-group mt-2 form-inline">
-									<label>${this}</label>
-									<input type="text" class="form-control ml-2" value="${e.target.style[this]}" name="style-${this}" required>
+		$.ajax({
+			url:'/admin/pages/draftContentRequest',
+			success: function(result){
+				for (let selector in result['query_selectors']){
+					$.each(result['query_selectors'][selector][2], function(i){
+						let style = `<div class="form-group mt-2 form-inline">
+									<label>${i}</label>
+									<input type="text" class="form-control ml-2" value="${this}" name="style-${i}" required>
 									<a><i class="btn delete-style far fa-trash-alt"></i></a>
 								</div>`;
-				$('.modal-form-styles').append(style);
-			})
-			$('#editContentModal').modal('show');
-
+						$('.modal-form-styles').append(style);
+					})
+					$('#editContentModal').modal('show');
+				}
+			}
 		})
+
 
 
 		$(document).on('click', '.form-submit-modal', function(){
@@ -421,6 +468,7 @@
 
 
 	})
+})
 
 </script>
 {% endblock %}

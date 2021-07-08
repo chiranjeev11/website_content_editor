@@ -113,9 +113,56 @@ class Styles(db.Model):
 	style_value = db.Column(db.String(255))
 
 
+class Draft_Elements(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	page_id = db.Column(db.Integer, db.ForeignKey('pages.id'))
+
+	draft_id = db.Column(db.Integer, db.ForeignKey('draft.id'))
+
+	element_type = db.Column(db.String(255))
+
+	text = db.Column(db.Text)
+
+	query_selector = db.Column(db.String(255))
+
+	attributes = db.relationship('Draft_Attributes', backref='draft_element', lazy='dynamic')
+
+	styles = db.relationship('Draft_Styles', backref='draft_element_style', lazy='dynamic')
+
+class Draft_Attributes(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	draft_element_id = db.Column(db.Integer, db.ForeignKey('draft__elements.id'))
+
+	draft_id = db.Column(db.Integer, db.ForeignKey('draft.id'))
+
+	attribute = db.Column(db.String(255))
+
+	attribute_value = db.Column(db.String(255))
 
 
+class Draft_Styles(db.Model):
 
+	id = db.Column(db.Integer, primary_key=True)
+
+	draft_element_id = db.Column(db.Integer, db.ForeignKey('draft__elements.id'))
+
+	draft_id = db.Column(db.Integer, db.ForeignKey('draft.id'))
+
+	style_attr = db.Column(db.String(255))
+
+	style_value = db.Column(db.String(255))
+
+class Draft(db.Model):
+
+	id = db.Column(db.Integer, primary_key=True)
+
+	page_id = db.Column(db.Integer, db.ForeignKey('pages.id'))
+
+	status = db.Column(db.String(255))
 
 
 

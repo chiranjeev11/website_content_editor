@@ -46,8 +46,8 @@
 	<div class="component-main">
 		<nav class="navbar navbar-expand-lg shadow-sm pb-1" id="navbar">
 			<div class="container">
-				<a class="navbar-brand" id="logo" href="https://awakinn.com"><img  class="editable img-logo" src="images/logo_2.png" width="120" alt="logo" query-selector=".component-main .img-logo"></a>
-				<a class="button nav-link btn contact_btn px-3 ml-auto mr-3 d-block d-lg-none typeform-share a-applynow editable" href="https://form.typeform.com/to/wzbh8PkD?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .applynow">Apply Now</a> 
+				<a class="navbar-brand" id="logo" href="#"><img  class="editable img-logo" src="images/logo_2.png" width="120" alt="logo" query-selector=".component-main .img-logo"></a>
+				<a class="button nav-link btn contact_btn px-3 ml-auto mr-3 d-block d-lg-none typeform-share a-applynow editable" href="https://form.typeform.com/to/wzbh8PkD?typeform-medium=embed-snippet" data-mode="drawer_right" target="_blank" query-selector=".component-main .a-applynow">Apply Now</a> 
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" style="border: none; background: #3726A6; color: #fff;"><i class="fas fa-bars"></i></button>
 				<div class="collapse navbar-collapse justify-content-end py-4 py-lg-0" id="collapsibleNavbar">
 					<ul class="navbar-nav">
@@ -68,13 +68,13 @@
 		<div class="d-flex align-content-center flex-wrap" id="home_">
 			<div class="container-fluid">
 				<div class="col-lg-8 offset-lg-2 my-4 mt-5 pt-5 text-center">
-					<h1 id="get_head" class="h1-getjob editable" query-selector=".component-main .h1-getjob" contenteditable="True">Get Job. Pay Later<sup>*</sup></h1>
+					<h1 id="get_head" class="h1-getjob editable" query-selector=".component-main .h1-getjob">Get Job. Pay Later<sup>*</sup></h1>
 					<h1 class="mt-2 h1-become editable" id="home_head" query-selector=".component-main .h1-become">Become a Software Engineer</h1>
 					<p class="home_desc pt-2 p-learn editable" query-selector=".component-main .p-learn">Learn from professionals working in tech giants and pay after getting a job of minimum <mark>₹5 LPA</mark></p>
 					<a href="#curriculum" class="btn mt-3 px-4 py-2 shadow _action_btn_apply a-explore editable" query-selector=".component-main .a-explore">Explore Our Programs</a>
 				</div>
 				<div class="col-lg-6 offset-lg-3 my-5 text-center">
-					<img src="images/landing_img.png" class="img-landing_img editable" id="landing_img" alt="software engineering" query-selector=".component-main img-landing_img">
+					<img src="images/landing_img.png" class="img-landing_img img-fluid editable" id="landing_img" alt="software engineering" query-selector=".component-main .img-landing_img">
 				</div>
 			</div>
 		</div>
@@ -95,7 +95,7 @@
 							<br><i class="fas fa-check-circle"></i> Interview Preparation
 							<br><i class="fas fa-check-circle"></i> 24*7 Access
 							<br><i class="fas fa-check-circle"></i> Flexible Timings
-							<br><i class="fas fa-check-circle"></i> Anytime Doubt Sessions
+						  <br><i class="fas fa-check-circle"></i> Anytime Doubt Sessions
 							<br><i class="fas fa-check-circle"></i> Live Projects
 							<br><i class="fas fa-check-circle"></i> Open Source Contribution
 						</p>
@@ -115,5 +115,24 @@
 			</div>
 		</div>
 	</div>
+	<script type="text/javascript">
+		$.ajax({
+			url:'/admin/pages/contentRequest',
+			success: function(result){
+				for (let selector in result['query_selectors']){
+					$(selector).html(result['query_selectors'][selector][0])
+					$.each(result['query_selectors'][selector][1], function(i){
+						$(selector).attr(i, this);
+					})
+					$.each(result['query_selectors'][selector][2], function(i){
+						$(selector).css(i, this);
+					})
+				}
+				// document.querySelector('.loader-hide').style.opacity = 1;
+						
+				// document.querySelector('.loader').style.display = 'none';
+			}
+		})
+	</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, Response
-from app.models import Pages, Meta_Content, User, Elements, Attributes, Styles
+from app.models import Pages, Meta_Content, User, Elements, Attributes, Styles, Draft_Elements, Draft_Attributes, Draft_Styles
 from app.utils import save_picture
 from app import app, login, db
 import os
@@ -163,6 +163,64 @@ def terms_conditions():
 
 	return render_template('terms_conditions.html', page=meta_obj, image_path=image_path, title="Terms and Conditions")
 
+@app.route('/admin/pages/editContent/publish', methods=['GET', 'POST'])
+@login_required
+def publish():
+
+	draft_elements = Draft_Elements.query.all()
+
+	elements = Elements.query.all()
+
+	for draft_element in draft_elements:
+
+		element = Elements.query.filter_by(query_selector=draft_element.query_selector).first()
+
+		element.text = draft_element.text
+
+		for draft_attribute in draft_element.attributes:
+
+			attribute = Attributes.query.filter_by(element_id=element.id, attribute=draft_attribute.attribute).first()
+
+			if attribute:
+
+				attribute.attribute_value = draft_attribute.attribute_value
+
+				db.session.add(attribute)
+
+			else:
+
+				new_attribute = Attributes(element_id=element.id, attribute=draft_attribute.attribute, attribute_value=draft_attribute.attribute_value)
+
+				db.session.add(new_attribute)
+
+		for draft_style in draft_element.styles:
+
+			style = Styles.query.filter_by(element_id=element.id, style_attr=draft_style.style_attr).first()
+
+			print(style)
+
+			if style:
+
+				print(1)
+
+				style.style_value = draft_style.style_value
+
+				db.session.add(style)
+
+			else:
+				print(2)
+				new_style = Styles(element_id=element.id, style_attr=draft_style.style_attr, style_value=draft_style.style_value)
+
+				db.session.add(new_style)
+
+
+
+		db.session.add(element)
+
+		db.session.commit()
+
+	return jsonify({'result':'done'})
+
 
 @app.route('/admin/pages/editContent', methods=['GET', 'POST'])
 @login_required
@@ -198,7 +256,7 @@ def edit_Content():
 
 				element_selector = request.form['element-selector']
 
-				element = Elements.query.filter_by(query_selector=element_selector).first()
+				element = Draft_Elements.query.filter_by(query_selector=element_selector).first()
 
 			elif item.split('-')[0] == 'style':
 
@@ -232,8 +290,7 @@ def edit_Content():
 
 			for style in styles_delete:
 
-
-				style_delete = Styles.query.filter_by(element_id=element.id, style_attr=style).first()
+				style_delete = Draft_Styles.query.filter_by(draft_element_id=element.id, style_attr=style).first()
 
 				db.session.delete(style_delete)
 
@@ -241,7 +298,7 @@ def edit_Content():
 
 			for attribute in attributes_delete:
 
-				attr_delete = Attributes.query.filter_by(element_id=element.id, attribute=attribute).first()
+				attr_delete = Draft_Attributes.query.filter_by(draft_element_id=element.id, attribute=attribute).first()
 
 				db.session.delete(attr_delete)
 
@@ -249,7 +306,7 @@ def edit_Content():
 
 			for style in styles_edit:
 
-				style_edit = Styles.query.filter_by(element_id=element.id, style_attr=style).first()
+				style_edit = Draft_Styles.query.filter_by(draft_element_id=element.id, style_attr=style).first()
 
 				style_edit.style_value = request.form['style'+'-'+style]
 
@@ -261,7 +318,7 @@ def edit_Content():
 
 				if attribute!='style':
 
-					attr_edit = Attributes.query.filter_by(element_id=element.id, attribute=attribute).first()
+					attr_edit = Draft_Attributes.query.filter_by(draft_element_id=element.id, attribute=attribute).first()
 
 					attr_edit.attribute_value = request.form['attr'+'-'+attribute]
 
@@ -271,17 +328,38 @@ def edit_Content():
 
 			for attribute in add_attributes:
 
-				attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=request.form['addattribute_value'+'-'+attribute])
+				check_attr = Draft_Attributes.query.filter_by(draft_element_id=element.id, attribute=attribute).first()
 
-				db.session.add(attr)
+				if check_attr:
+
+					check_attr.attribute_value = request.form['addattribute_value'+'-'+attribute]
+
+					db.session.add(check_attr)
+
+				else:
+
+
+					attr = Draft_Attributes(draft_element_id=element.id, attribute=attribute, attribute_value=request.form['addattribute_value'+'-'+attribute])
+
+					db.session.add(attr)
 
 		if add_styles:
 
 			for style in add_styles:
 
-				style_obj = Styles(element_id=element.id, style_attr=style, style_value=request.form['addstyle_value'+'-'+style])
+				check_style = Draft_Styles.query.filter_by(draft_element_id=element.id, style_attr=style).first()
 
-				db.session.add(style_obj)
+				if check_style:
+
+					check_style.style_value = request.form['addstyle_value'+'-'+style]
+
+					db.session.add(check_style)
+
+				else:
+
+					style_obj = Draft_Styles(draft_element_id=element.id, style_attr=style, style_value=request.form['addstyle_value'+'-'+style])
+
+					db.session.add(style_obj)
 
 		if element_html:
 
@@ -336,6 +414,32 @@ def content_Request():
 
 	return jsonify({'query_selectors':query_selectors})
 
+@app.route('/admin/pages/draftContentRequest', methods=['GET', 'POST'])
+@login_required
+def draft_content_Request():
+
+	elements = Draft_Elements.query.filter_by(page_id=7).all()
+
+	query_selectors = {}
+
+	for element in elements:
+
+		attributes = {}
+
+		styles = {}
+
+		for attribute in element.attributes:
+
+			attributes[attribute.attribute] = attribute.attribute_value
+
+		for style in element.styles:
+
+			styles[style.style_attr] = style.style_value
+
+		query_selectors[element.query_selector] = [element.text, attributes, styles]
+
+	return jsonify({'query_selectors':query_selectors})
+
 
 @app.route('/admin/pages/loadContentRequest', methods=['GET', 'POST'])
 @login_required
@@ -357,13 +461,13 @@ def add_attributes_request():
 
 	for query_selector in query_selectors:
 
-		element = Elements.query.filter_by(query_selector=query_selector).first()
+		element = Draft_Elements.query.filter_by(query_selector=query_selector).first()
 
 		attributes = query_selectors[query_selector]
 
 		for attribute in attributes:
 
-			attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
+			attr = Draft_Attributes(draft_element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
 
 			db.session.add(attr)
 
@@ -380,7 +484,7 @@ def add_elements_request():
 
 	for query_selector in query_selectors:
 
-		element = Elements.query.filter_by(query_selector=query_selector).first()
+		element = Draft_Elements.query.filter_by(query_selector=query_selector).first()
 
 		if element:
 
@@ -392,7 +496,7 @@ def add_elements_request():
 
 			element_type = query_selector.split()[1].split('-')[0]
 
-			element = Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=7)
+			element = Draft_Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=7)
 		
 		db.session.add(element)
 
