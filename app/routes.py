@@ -467,7 +467,7 @@ def add_attributes_request():
 
 		for attribute in attributes:
 
-			attr = Attributes(element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
+			attr = Draft_Attributes(draft_element_id=element.id, attribute=attribute, attribute_value=attributes[attribute])
 
 			db.session.add(attr)
 
@@ -484,7 +484,7 @@ def add_elements_request():
 
 	for query_selector in query_selectors:
 
-		element = Elements.query.filter_by(query_selector=query_selector).first()
+		element = Draft_Elements.query.filter_by(query_selector=query_selector).first()
 
 		if element:
 
@@ -496,7 +496,7 @@ def add_elements_request():
 
 			element_type = query_selector.split()[1].split('-')[0]
 
-			element = Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=3)
+			element = Draft_Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=3)
 		
 		db.session.add(element)
 
