@@ -392,7 +392,7 @@ def edit_Content():
 @login_required
 def content_Request():
 
-	elements = Elements.query.filter_by(page_id=7).all()
+	elements = Elements.query.filter_by(page_id=3).all()
 
 	query_selectors = {}
 
@@ -418,7 +418,7 @@ def content_Request():
 @login_required
 def draft_content_Request():
 
-	elements = Draft_Elements.query.filter_by(page_id=7).all()
+	elements = Draft_Elements.query.filter_by(page_id=3).all()
 
 	query_selectors = {}
 
@@ -496,7 +496,7 @@ def add_elements_request():
 
 			element_type = query_selector.split()[1].split('-')[0]
 
-			element = Draft_Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=7)
+			element = Draft_Elements(element_type=element_type, text=query_selectors[query_selector], query_selector=query_selector, page_id=3)
 		
 		db.session.add(element)
 
